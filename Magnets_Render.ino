@@ -6,10 +6,10 @@ void renderGrid(uint8_t currentPlane) {
 
     bool flash = false;
 
-uint8_t xOffset_Cols[] = { 11, 10 };
-uint8_t yOffset_Rows[] = { 10, 9 };
+    uint8_t xOffset_Cols[] = { 11, 10 };
+    uint8_t yOffset_Rows[] = { 10, 9 };
 
-    if ((game.getFrameCount() % 64 < 32)) {
+    if (game.getFrameCount() % 64 < 32 && gameState == GameState::Play) {
 
         flash = true;
 

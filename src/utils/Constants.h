@@ -43,46 +43,11 @@ namespace Music {
 
 namespace Constants {
 
-    const uint16_t DealCardCoords[] PROGMEM = {
-      // x,  y,  noOfIncs  StartingRot, numberofRots
-        44, 54,  24,       12,          27,  // 01
-        48, 48,  24,       12,          27,  // 02
-        52, 48,  24,       12,          27,  // 03
-        56, 48,  24,       12,          27,  // 04
-        60, 48,  24,       12,          27,  // 05
-        64, 48,  24,       12,          27,  // 06
-        68, 48,  24,       12,          27,  // 07
-        72, 48,  24,       12,          27,  // 08
-        76, 48,  24,       12,          27,  // 09
-        80, 48,  24,       12,          27,  // 10
-    };
-
     const int8_t Bounce[] PROGMEM = { -36, -30, -24, -16, -12, -6, 0, 4, 8, 12, 16, 20, 24, 28, 32, 28, 25, 22, 21, 21, 22, 25, 28, 32, 29, 27, 26, 26, 27, 28, 32, 30, 29, 30, 32, 31, 32 };
 
-    constexpr uint8_t NoPlayer = 255;
-    constexpr uint8_t NoCard = 255;
-    constexpr uint8_t NoBid = 255;
-    constexpr uint8_t NoWinner = 255;
-    constexpr uint8_t PlayerCount = 4;
-
-    constexpr uint8_t Delay = 12;
     constexpr uint8_t Title_Start_Action = 60;
-
-
-};
-
-struct DealPhysics {
-
-    float x = 0;
-    float y = 0;
-
-    float xInc = 0;
-    float yInc = 0;
-    float x2 = 0;
-    float y2 = 0;
-    float rot = 0;
-    float rotStart = 0;
-    float rotInc = 0;
-    int8_t noOfIncs = 0;
+    constexpr uint8_t Fill_MaxRand = 22;
+    constexpr uint8_t Fill_Orient_1 = 10;
+    constexpr uint8_t Fill_Orient_2 = 20;
 
 };

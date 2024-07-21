@@ -130,7 +130,10 @@ convert_header(IMAGES + 'HUD/Dealer.png',                                       
 
 convert_header(IMAGES + 'Titles/Wave_Top.png',                                                 BASE + 'Images.hpp', 'Wave_Top', 4)
 convert_header(IMAGES + 'Titles/Wave_Bot.png',                                                 BASE + 'Images.hpp', 'Wave_Bot', 4)
+convert_header(IMAGES + 'Titles/Wave_Left.png',                                                BASE + 'Images.hpp', 'Wave_Left', 4)
+convert_header(IMAGES + 'Titles/Wave_Right.png',                                               BASE + 'Images.hpp', 'Wave_Right', 4)
 convert_header(IMAGES + 'Titles/Magnets.png',                                                  BASE + 'Images.hpp', 'Magnets', 4)
+convert_header(IMAGES + 'Titles/InGame.png',                                                   BASE + 'Images.hpp', 'InGame', 4, 34, 40)
 
 convert_header(IMAGES + 'Tiles/Tile_0102.png',                                                 BASE + 'Images.hpp', 'Tile_0102', 4, 17, 8)
 convert_header(IMAGES + 'Tiles/Tile_0403.png',                                                 BASE + 'Images.hpp', 'Tile_0403', 4, 17, 8)

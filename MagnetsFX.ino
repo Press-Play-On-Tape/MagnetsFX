@@ -47,7 +47,6 @@ uint8_t titleCounter = 0;
 int16_t instructions_Y = 0;
 
 Font3x5 font3x5 = Font3x5();
-DealPhysics dealPhysics;
 
 #ifdef DEBUG_FIXED_RAND
 uint16_t seed = 72;

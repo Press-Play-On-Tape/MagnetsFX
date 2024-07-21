@@ -11,6 +11,7 @@ struct Game {
 
         uint8_t puzzle[9][10];
         uint8_t solution[9][10];
+        uint8_t reset[9][10];
         
     private:
 
@@ -58,11 +59,24 @@ struct Game {
 
         void setup() {
 
+            this->x = 1;
+            this->y = 1;
+
+            for (uint8_t y = 0; y < 9; y++) {
+
+                for (uint8_t x = 0; x < 10; x++) {
+                
+                    this->solution[y][x] = 0;
+                    this->puzzle[y][x] = 0;
+                    this->reset[y][x] = 0;
+
+                }
+
+            }
+
         }
 
         void loadPuzzle() {
-
-            this->setGameSize(GameSize::Medium);
 
 
             // Retrieve template count ..
@@ -107,8 +121,11 @@ struct Game {
 
             }
 
+            this->copy();
+
             #ifdef DEBUG
-                printPuzzle();
+                this->printPuzzle();
+                this->printSolution();
             #endif
            
             #ifndef DEBUG_FIXED_PUZZLE
@@ -135,13 +152,17 @@ struct Game {
 
             this->fillPuzzle();
             this->printPuzzle();
+            this->printSolution();
 
-            this->updateNumbers();
+            this->updateNumbers_Solution();
 
+// copy_SolutionToPuzzle();
+            // this->printPuzzle();
+            // this->printSolution();
         }
 
 
-        void updateNumbers() {
+        void updateNumbers_Solution() {
 
             // Rows
 
@@ -152,8 +173,57 @@ struct Game {
                 
                 for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
 
-                    if (this->isPlus(x, y)) plus++;
-                    if (this->isMinus(x, y)) minus++;
+                    uint8_t i = this->solution[y][x];
+
+                    if (this->isPlus(i)) plus++;
+                    if (this->isMinus(i)) minus++;
+
+                }
+
+                this->solution[y][0] = plus;
+                this->solution[y][this->getWidth() + 1] = minus;
+
+            }
+
+            // Cols
+
+            for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+
+                uint8_t minus = 0;
+                uint8_t plus = 0;
+                
+                for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+
+                    uint8_t i = this->solution[y][x];
+
+                    if (this->isPlus(i)) plus++;
+                    if (this->isMinus(i)) minus++;
+
+                }
+
+                this->solution[0][x] = plus;
+                this->solution[this->getHeight() + 1][x] = minus;
+
+            }
+
+        }
+
+
+        void updateNumbers_Puzzle() {
+
+            // Rows
+
+            for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+
+                uint8_t minus = 0;
+                uint8_t plus = 0;
+                
+                for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+
+                    uint8_t i = this->puzzle[y][x];
+
+                    if (this->isPlus(i)) plus++;
+                    if (this->isMinus(i)) minus++;
 
                 }
 
@@ -171,8 +241,10 @@ struct Game {
                 
                 for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
 
-                    if (this->isPlus(x, y)) plus++;
-                    if (this->isMinus(x, y)) minus++;
+                    uint8_t i = this->puzzle[y][x];
+
+                    if (this->isPlus(i)) plus++;
+                    if (this->isMinus(i)) minus++;
 
                 }
 
@@ -192,8 +264,8 @@ struct Game {
                     
                     uint8_t x2 = this->getWidth() - x + 1;
 
-                    uint8_t l = this->puzzle[y][x];
-                    uint8_t r = this->puzzle[y][x2];
+                    uint8_t l = this->solution[y][x];
+                    uint8_t r = this->solution[y][x2];
 
                     switch (l) {
 
@@ -225,8 +297,8 @@ struct Game {
                             
                     }
 
-                    this->puzzle[y][x] = r;
-                    this->puzzle[y][x2] = l;
+                    this->solution[y][x] = r;
+                    this->solution[y][x2] = l;
 
                 }
 
@@ -243,8 +315,8 @@ struct Game {
                     
                     uint8_t y2 = this->getHeight() - y + 1;
 
-                    uint8_t u = this->puzzle[y][x];
-                    uint8_t d = this->puzzle[y2][x];
+                    uint8_t u = this->solution[y][x];
+                    uint8_t d = this->solution[y2][x];
 
                     switch (u) {
 
@@ -276,19 +348,20 @@ struct Game {
                             
                     }
 
-                    this->puzzle[y][x] = d;
-                    this->puzzle[y2][x] = u;
+                    this->solution[y][x] = d;
+                    this->solution[y2][x] = u;
 
                 }
 
             }
+
 
             // Fix centre line ..
 
             for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
 
                 uint8_t y = (this->getHeight() / 2) + 1;
-                uint8_t u = this->puzzle[y][x];
+                uint8_t u = this->solution[y][x];
 
                 switch (u) {
 
@@ -305,7 +378,7 @@ struct Game {
                         
                 }
 
-                this->puzzle[y][x] = u;
+                this->solution[y][x] = u;
 
 
             }
@@ -322,7 +395,7 @@ struct Game {
 
                 uint8_t x = random(1, this->getWidth() + 1);
                 uint8_t y = random(1, this->getHeight() + 1);
-                uint8_t space = this->puzzle[y][x];
+                uint8_t space = this->solution[y][x];
 
                 switch (space) {
                     
@@ -333,13 +406,13 @@ struct Game {
                             switch (r) {
 
                                 case 0:
-                                    this->puzzle[y][x] = Tiles::Horizontal_MinusPlus_Start;
-                                    this->puzzle[y][x + 1] = Tiles::Horizontal_MinusPlus_End;
+                                    this->solution[y][x] = Tiles::Horizontal_MinusPlus_Start;
+                                    this->solution[y][x + 1] = Tiles::Horizontal_MinusPlus_End;
                                     break;
 
                                 case 1:
-                                    this->puzzle[y][x] = Tiles::Horizontal_PlusMinus_Start;
-                                    this->puzzle[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
+                                    this->solution[y][x] = Tiles::Horizontal_PlusMinus_Start;
+                                    this->solution[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
                                     break;
 
                             }
@@ -358,13 +431,13 @@ struct Game {
 
 
                                 case 0:
-                                    this->puzzle[y][x] = Tiles::Vertical_MinusPlus_Start;
-                                    this->puzzle[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+                                    this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                    this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
                                     break;
 
                                 case 1:
-                                    this->puzzle[y][x] = Tiles::Vertical_PlusMinus_Start;
-                                    this->puzzle[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+                                    this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                    this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
                                     break;
 
                             }
@@ -388,75 +461,126 @@ struct Game {
                 for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
                 
                     uint8_t space = this->puzzle[y][x];
-                    uint8_t surroundingPlus = 0;
-                    uint8_t surroundingMinus = 0;
 
-                    if (this->isPlus(x, y - 1))      surroundingPlus++;
-                    if (this->isPlus(x, y + 1))      surroundingPlus++;
-                    if (this->isPlus(x - 1, y))      surroundingPlus++;
-                    if (this->isPlus(x + 1, y))      surroundingPlus++;
-
-                    if (this->isMinus(x, y - 1))     surroundingMinus++;
-                    if (this->isMinus(x, y + 1))     surroundingMinus++;
-                    if (this->isMinus(x - 1, y))     surroundingMinus++;
-                    if (this->isMinus(x + 1, y))     surroundingMinus++;
 
                     switch (space) {
                         
                         case Tiles::Horizontal_Blank_Start: 
                             {
-                                uint8_t r = random(16);
-    // Serial.print("H ");
-    // Serial.print(x);
-    // Serial.print(",");
-    // Serial.print(y);
-    // Serial.print("=");
-    // Serial.print(r);
-    // Serial.print(" (+");
-    // Serial.print(surroundingPlus);
-    // Serial.print(" -");
-    // Serial.print(surroundingMinus);
-    // Serial.println(") ");
+                                uint8_t r = random(Constants::Fill_MaxRand);
+
+                                uint8_t surroundingPlus_L = 0;
+                                uint8_t surroundingMinus_L = 0;
+                                uint8_t surroundingPlus_R = 0;
+                                uint8_t surroundingMinus_R = 0;
+
+                                if (this->isPlus(x, y - 1))         surroundingPlus_L++;
+                                if (this->isPlus(x, y + 1))         surroundingPlus_L++;
+                                if (this->isPlus(x - 1, y))         surroundingPlus_L++;
+                                if (this->isPlus(x + 1, y))         surroundingPlus_L++;
+
+                                if (this->isMinus(x, y - 1))        surroundingMinus_L++;
+                                if (this->isMinus(x, y + 1))        surroundingMinus_L++;
+                                if (this->isMinus(x - 1, y))        surroundingMinus_L++;
+                                if (this->isMinus(x + 1, y))        surroundingMinus_L++;
+
+                                if (this->isPlus(x + 1, y - 1))     surroundingPlus_R++;
+                                if (this->isPlus(x + 1, y + 1))     surroundingPlus_R++;
+
+                                if (this->isMinus(x + 1, y - 1))    surroundingMinus_R++;
+                                if (this->isMinus(x + 1, y + 1))    surroundingMinus_R++;
+
+                                if (x + 2 < this->getWidth() + 2) {
+    
+                                    if (this->isPlus(x + 2, y))         surroundingPlus_R++;
+                                    if (this->isMinus(x + 2, y))        surroundingMinus_R++;
+
+                                }
+
+    Serial.print("H ");
+    Serial.print(x);
+    Serial.print(",");
+    Serial.print(y);
+    Serial.print("=");
+    Serial.print(r);
+    Serial.print(" (+");
+    Serial.print(surroundingPlus_L);
+    Serial.print(" -");
+    Serial.print(surroundingMinus_L);
+    Serial.print(") ");
+    Serial.print(" (+");
+    Serial.print(surroundingPlus_R);
+    Serial.print(" -");
+    Serial.print(surroundingMinus_R);
+    Serial.println(") ");
                                 switch (r) {
 
-                                    case 0 ... 14:
+                                    case 0 ... Constants::Fill_Orient_2:
                                         {
+                                            
+                                            //Must be neutral ..
 
-                                            if (surroundingPlus > 0 && surroundingMinus > 0) {
+                                            if (surroundingPlus_L > 0 && surroundingMinus_L > 0) {
 
-                                                this->puzzle[y][x] = Tiles::Horizontal_Neutral_Start;
-                                                this->puzzle[y][x + 1] = Tiles::Horizontal_Neutral_End;
-
-                                            }
-                                            else if (surroundingPlus > 0 && surroundingMinus == 0) {
-
-                                                this->puzzle[y][x] = Tiles::Horizontal_MinusPlus_Start;
-                                                this->puzzle[y][x + 1] = Tiles::Horizontal_MinusPlus_End;
+                                                this->solution[y][x] = Tiles::Horizontal_Neutral_Start;
+                                                this->solution[y][x + 1] = Tiles::Horizontal_Neutral_End;
 
                                             }
-                                            else if (surroundingPlus == 0 && surroundingMinus > 0) {
+                                            else if (surroundingPlus_L > 0 && surroundingPlus_R > 0) {
 
-                                                this->puzzle[y][x] = Tiles::Horizontal_PlusMinus_Start;
-                                                this->puzzle[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
+                                                this->solution[y][x] = Tiles::Horizontal_Neutral_Start;
+                                                this->solution[y][x + 1] = Tiles::Horizontal_Neutral_End;
+
+                                            }
+                                            else if (surroundingMinus_L > 0 && surroundingMinus_R > 0) {
+
+                                                this->solution[y][x] = Tiles::Horizontal_Neutral_Start;
+                                                this->solution[y][x + 1] = Tiles::Horizontal_Neutral_End;
+
+                                            }
+
+                                            // OK to place a tile ..                                            
+                                            else if (surroundingPlus_L > 0 && surroundingPlus_R == 0) {
+
+                                                this->solution[y][x] = Tiles::Horizontal_MinusPlus_Start;
+                                                this->solution[y][x + 1] = Tiles::Horizontal_MinusPlus_End;
+
+                                            }
+                                            else if (surroundingPlus_L == 0 && surroundingPlus_R > 0) {
+
+                                                this->solution[y][x] = Tiles::Horizontal_PlusMinus_Start;
+                                                this->solution[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
+
+                                            }
+                                            else if (surroundingMinus_L > 0 && surroundingMinus_R == 0) {
+
+                                                this->solution[y][x] = Tiles::Horizontal_PlusMinus_Start;
+                                                this->solution[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
+
+                                            }
+                                            else if (surroundingMinus_L == 0 && surroundingMinus_R > 0) {
+
+                                                this->solution[y][x] = Tiles::Horizontal_MinusPlus_Start;
+                                                this->solution[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
 
                                             }
                                             else {
 
                                                 switch (r) {
 
-                                                    case 0 ... 7:
-                                                        this->puzzle[y][x] = Tiles::Horizontal_MinusPlus_Start;
-                                                        this->puzzle[y][x + 1] = Tiles::Horizontal_MinusPlus_End;
+                                                    case 0 ... Constants::Fill_Orient_1:
+                                                        this->solution[y][x] = Tiles::Horizontal_MinusPlus_Start;
+                                                        this->solution[y][x + 1] = Tiles::Horizontal_MinusPlus_End;
                                                         break;
 
-                                                    case 8 ... 14:
-                                                        this->puzzle[y][x] = Tiles::Horizontal_PlusMinus_Start;
-                                                        this->puzzle[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
+                                                    case Constants::Fill_Orient_1 + 1 ... Constants::Fill_Orient_2:
+                                                        this->solution[y][x] = Tiles::Horizontal_PlusMinus_Start;
+                                                        this->solution[y][x + 1] = Tiles::Horizontal_PlusMinus_End;
                                                         break;
 
                                                     default:
-                                                        this->puzzle[y][x] = Tiles::Horizontal_Neutral_Start;
-                                                        this->puzzle[y][x + 1] = Tiles::Horizontal_Neutral_End;
+                                                        this->solution[y][x] = Tiles::Horizontal_Neutral_Start;
+                                                        this->solution[y][x + 1] = Tiles::Horizontal_Neutral_End;
                                                         break;
 
                                                 }
@@ -468,8 +592,8 @@ struct Game {
 
                                     default:
 
-                                        this->puzzle[y][x] = Tiles::Horizontal_Neutral_Start;
-                                        this->puzzle[y][x + 1] = Tiles::Horizontal_Neutral_End;
+                                        this->solution[y][x] = Tiles::Horizontal_Neutral_Start;
+                                        this->solution[y][x + 1] = Tiles::Horizontal_Neutral_End;
                                         break;
                                         
 
@@ -481,68 +605,153 @@ struct Game {
                             
                         case Tiles::Vertical_Blank_Start: 
                             {
-                                uint8_t r = random(16);
-    // Serial.print("V ");
-    // Serial.print(x);
-    // Serial.print(",");
-    // Serial.print(y);
-    // Serial.print("=");
-    // Serial.print(r);
-    // Serial.print(" (+");
-    // Serial.print(surroundingPlus);
-    // Serial.print(" -");
-    // Serial.print(surroundingMinus);
-    // Serial.println(")");
+                                uint8_t r = random(Constants::Fill_MaxRand);
+
+                                uint8_t surroundingPlus_U = 0;
+                                uint8_t surroundingMinus_U = 0;
+                                uint8_t surroundingPlus_D = 0;
+                                uint8_t surroundingMinus_D = 0;
+
+                                if (this->isPlus(x, y - 1))         surroundingPlus_U++;
+                                if (this->isPlus(x, y + 1))         surroundingPlus_U++;
+                                if (this->isPlus(x - 1, y))         surroundingPlus_U++;
+                                if (this->isPlus(x + 1, y))         surroundingPlus_U++;
+
+                                if (this->isMinus(x, y - 1))        surroundingMinus_U++;
+                                if (this->isMinus(x, y + 1))        surroundingMinus_U++;
+                                if (this->isMinus(x - 1, y))        surroundingMinus_U++;
+                                if (this->isMinus(x + 1, y))        surroundingMinus_U++;
+
+                                if (this->isPlus(x - 1, y + 1))     surroundingPlus_D++;
+                                if (this->isPlus(x + 1, y + 1))     surroundingPlus_D++;
+
+                                if (this->isMinus(x - 1, y + 1))    surroundingMinus_D++;
+                                if (this->isMinus(x + 1, y + 1))    surroundingMinus_D++;
+
+                                if (x + 2 < this->getHeight() + 2) {
+
+                                    if (this->isPlus(x, y + 2))         surroundingPlus_D++;
+                                    if (this->isMinus(x, y + 2))        surroundingMinus_D++;
+
+                                }
+
+    Serial.print("V ");
+    Serial.print(x);
+    Serial.print(",");
+    Serial.print(y);
+    Serial.print("=");
+    Serial.print(r);
+    Serial.print(" (+");
+    Serial.print(surroundingPlus_U);
+    Serial.print(" -");
+    Serial.print(surroundingMinus_U);
+    Serial.print(")");
+    Serial.print(" (+");
+    Serial.print(surroundingPlus_D);
+    Serial.print(" -");
+    Serial.print(surroundingMinus_D);
+    Serial.println(")");
                             switch (r) {
 
-                                    case 0 ... 14:
+                                    case 0 ... Constants::Fill_Orient_2:
                                         {
 
-                                            if (surroundingPlus > 0 && surroundingMinus > 0) {
+                                            // if (surroundingPlus > 0 && surroundingMinus > 0) {
 
-                                                this->puzzle[y][x] = Tiles::Vertical_Neutral_Start;
-                                                this->puzzle[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                            //     this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                            //     this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
+
+                                            // }
+                                            // else if (surroundingPlus > 0 && surroundingMinus == 0) {
+
+                                            //     this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                            //     this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+
+                                            // }
+                                            // else if (surroundingPlus == 0 && surroundingMinus > 0) {
+
+                                            //     this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                            //     this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+
+                                            // }
+                                            // else {
+
+                                            //Must be neutral ..
+                                            
+                                            if (surroundingPlus_U > 0 && surroundingMinus_D > 0) {
+
+                                                this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                                this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
 
                                             }
-                                            else if (surroundingPlus > 0 && surroundingMinus == 0) {
+                                            else if (surroundingPlus_U > 0 && surroundingPlus_D > 0) {
 
-                                                this->puzzle[y][x] = Tiles::Vertical_MinusPlus_Start;
-                                                this->puzzle[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+                                                this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                                this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
 
                                             }
-                                            else if (surroundingPlus == 0 && surroundingMinus > 0) {
+                                            else if (surroundingMinus_U > 0 && surroundingMinus_D > 0) {
 
-                                                this->puzzle[y][x] = Tiles::Vertical_PlusMinus_Start;
-                                                this->puzzle[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+                                                this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                                this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
+
+                                            }
+
+                                            // OK to place a tile ..             
+
+                                            else if (surroundingPlus_U > 0 && surroundingPlus_D == 0) {
+
+                                                this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                                this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+
+                                            }
+                                            else if (surroundingPlus_U == 0 && surroundingPlus_D > 0) {
+
+                                                this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                                this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+
+                                            }
+                                            else if (surroundingMinus_U > 0 && surroundingMinus_D == 0) {
+
+                                                this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                                this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+
+                                            }
+                                            else if (surroundingMinus_U == 0 && surroundingMinus_D > 0) {
+
+                                                this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                                this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
 
                                             }
                                             else {
 
                                                 switch (r) {
 
-                                                    case 0 ... 7:
-                                                        this->puzzle[y][x] = Tiles::Vertical_MinusPlus_Start;
-                                                        this->puzzle[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+                                                    case 0 ... Constants::Fill_Orient_1:
+                                                        this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                                        this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
                                                         break;
 
-                                                    case 8 ... 14:
-                                                        this->puzzle[y][x] = Tiles::Vertical_PlusMinus_Start;
-                                                        this->puzzle[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+                                                    case Constants::Fill_Orient_1 + 1 ... Constants::Fill_Orient_2:
+                                                        this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                                        this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
                                                         break;
 
                                                     default:
-                                                        this->puzzle[y][x] = Tiles::Vertical_Neutral_Start;
-                                                        this->puzzle[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                                        this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                                        this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
                                                         break;
 
                                                 }
+
                                             }
+
                                         }
                                         break;
 
                                     default:
-                                        this->puzzle[y][x] = Tiles::Vertical_Neutral_Start;
-                                        this->puzzle[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                        this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                        this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
                                         break;
                                         
 
@@ -556,11 +765,6 @@ struct Game {
                             
                 }
 
-                //     DEBUG_PRINT(this->puzzle[y][x]);
-                //     DEBUG_PRINT(" ");
-
-
-                // DEBUG_PRINTLN();
             }
 
         }
@@ -571,9 +775,9 @@ struct Game {
 
             DEBUG_PRINTLN(F("Puzzle ----------------------"));
 
-            for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+            for (uint8_t y = 0; y < this->getHeight() + 2; y++) {
 
-                for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+                for (uint8_t x = 0; x < this->getWidth() + 2; x++) {
                 
                     DEBUG_PRINT(this->puzzle[y][x]);
                     DEBUG_PRINT(" ");
@@ -587,10 +791,31 @@ struct Game {
 
         }
 
+        void printSolution() {
+
+            #ifdef DEBUG
+
+            DEBUG_PRINTLN(F("Solution ----------------------"));
+
+            for (uint8_t y = 0; y < this->getHeight() + 2; y++) {
+
+                for (uint8_t x = 0; x < this->getWidth() + 2; x++) {
+                
+                    DEBUG_PRINT(this->solution[y][x]);
+                    DEBUG_PRINT(" ");
+
+                }
+
+                DEBUG_PRINTLN();
+            }
+
+            #endif
+
+        }
 
         bool isPlus(uint8_t x, uint8_t y) {
 
-            uint8_t i = this->puzzle[y][x];
+            uint8_t i = this->solution[y][x];
             return isPlus(i);
 
         }
@@ -616,7 +841,7 @@ struct Game {
 
         bool isMinus(uint8_t x, uint8_t y) {
 
-            uint8_t i = this->puzzle[y][x];
+            uint8_t i = this->solution[y][x];
             return isMinus(i);
 
         }
@@ -637,6 +862,88 @@ struct Game {
                     return false;
                     
             }
+
+        }
+
+        void copy() {
+            
+            for (uint8_t y = 0; y < 9; y++) {
+
+                for (uint8_t x = 0; x < 10; x++) {
+                
+                    this->solution[y][x] = this->puzzle[y][x];
+                    this->reset[y][x] = this->puzzle[y][x];
+
+                }
+
+            }
+
+        }
+
+        void copy_SolutionToPuzzle() {
+            
+            for (uint8_t y = 0; y < 9; y++) {
+
+                for (uint8_t x = 0; x < 10; x++) {
+                
+                    this->puzzle[y][x] = this->solution[y][x];
+
+                }
+
+            }
+
+        }
+
+        void clearPuzzle() {
+            
+            for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+
+                for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+                
+                    this->puzzle[y][x] = this->reset[y][x];
+                    this->updateNumbers_Puzzle();
+
+                }
+
+            }
+
+        }
+
+        bool gameComplete() {
+
+            for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+
+                if (this->solution[y][0] != this->puzzle[y][0]) {
+
+                    return false;
+                    
+                }
+
+                if (this->solution[y][this->getWidth() + 1] != this->puzzle[y][this->getWidth() + 1]) {
+
+                    return false;
+                    
+                }
+
+            }
+
+            for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+            
+                if (this->solution[0][x] != this->puzzle[0][x]) {
+
+                    return false;
+                    
+                }
+
+                if (this->solution[this->getHeight() + 1][0] != this->puzzle[this->getHeight() + 1][0]) {
+
+                    return false;
+                    
+                }
+
+            }
+
+            return true;
 
         }
 

@@ -57,6 +57,11 @@ enum class GameState : uint8_t {
     Play_Init,
     Play_Start,
         Play = Play_Start,
+        Play_Menu0,
+        Play_Menu1,
+        Play_Menu2,
+        Play_Menu3,
+        Play_Menu4,
     Play_End,
     
 };
@@ -69,6 +74,17 @@ inline GameState &operator++(GameState &c) {
 inline GameState operator++(GameState &c, int) {
   GameState result = c;
   ++c;
+  return result;
+}
+
+inline GameState &operator--(GameState &c) {
+  c = static_cast<GameState>( static_cast<uint8_t>(c) - 1 );
+  return c;
+}
+
+inline GameState operator--(GameState &c, int) {
+  GameState result = c;
+  --c;
   return result;
 }
 

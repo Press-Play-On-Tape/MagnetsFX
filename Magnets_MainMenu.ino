@@ -75,7 +75,8 @@ void title_Update() {
                 
                 cookie.hasSavedGame = false;
                 saveCookie(true);
-                gameState = GameState::Play_Init;
+                game.setFrameCount(300);
+                gameState = GameState::Title_SelectSize;
 
             }
 
@@ -107,7 +108,7 @@ void title_Update() {
 
                 cookie.hasSavedGame = false;
                 saveCookie(true);
-                gameState = GameState::Play_Init;
+                gameState = GameState::Title_SelectSize;
 
             }
 
@@ -160,6 +161,53 @@ void title_Update() {
                 instructions_Y = 0;
             }
 
+            break;
+
+        case GameState::Title_SelectSize:
+
+            if (justPressed & UP_BUTTON) {
+                if (game.getGameSize() > GameSize::Small) {
+                    game.setGameSize(game.getGameSize() - 1);
+                }
+            }
+
+            if (justPressed & DOWN_BUTTON) {
+                if (game.getGameSize() < GameSize::Large) {
+                    game.setGameSize(game.getGameSize() + 1);
+                }
+            }
+
+            if (justPressed & A_BUTTON) {
+
+                gameState = GameState::Title_SelectHardness;
+
+            }
+
+            if (justPressed & B_BUTTON) {
+
+                gameState = GameState::Title_OptPlay;
+
+            }
+
+            break;
+
+        case GameState::Title_SelectHardness:
+
+            if (justPressed & UP_BUTTON) {
+                game.setGameHard(GameHard::Easy);
+            }
+
+            if (justPressed & DOWN_BUTTON) {
+                game.setGameHard(GameHard::Hard);
+            }
+
+            if (justPressed & A_BUTTON) {
+                gameState = GameState::Play_Init;
+            }
+
+            if (justPressed & B_BUTTON) {
+                gameState = GameState::Title_SelectSize;
+            }
             break;
 
         #ifndef DEBUG_SOUND
@@ -385,6 +433,16 @@ void title(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
             break;
 
+        case GameState::Title_SelectSize: 
+            renderWaves(currentPlane);
+            SpritesU::drawPlusMaskFX(80, 21, Images::Select, (game.getGameSize() * 3) + currentPlane);
+            break;
+
+        case GameState::Title_SelectHardness: 
+            renderWaves(currentPlane);
+            SpritesU::drawPlusMaskFX(80, 21, Images::Select, 9 + (game.getGameHard() * 3) + currentPlane);
+            break;
+
         default:
             renderCommon(currentPlane);
             break;    
@@ -393,12 +451,18 @@ void title(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
 }
 
-void renderCommon(uint8_t currentPlane) {
+void renderWaves(uint8_t currentPlane) {
     
     SpritesU::drawOverwriteFX(xTop, -1, Images::Wave_Top, currentPlane);
     SpritesU::drawOverwriteFX(xTop - 204, -1, Images::Wave_Top, currentPlane);
     SpritesU::drawOverwriteFX(xBot, 43, Images::Wave_Bot, currentPlane);
     SpritesU::drawOverwriteFX(xBot + 204, 43, Images::Wave_Bot, currentPlane);
+
+}
+
+void renderCommon(uint8_t currentPlane) {
+
+    renderWaves(currentPlane);
 
     switch (game.getFrameCount()) {
 

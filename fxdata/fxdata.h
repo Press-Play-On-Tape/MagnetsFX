@@ -6,8 +6,8 @@ using uint24_t = __uint24;
 
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
-constexpr uint16_t FX_DATA_PAGE  = 0xfd7b;
-constexpr uint24_t FX_DATA_BYTES = 160952;
+constexpr uint16_t FX_DATA_PAGE  = 0xfd5b;
+constexpr uint24_t FX_DATA_BYTES = 169058;
 
 constexpr uint16_t FX_SAVE_PAGE  = 0xfff0;
 constexpr uint24_t FX_SAVE_BYTES = 2;
@@ -84,18 +84,21 @@ namespace Images
   constexpr uint24_t Dealer = 0x024B55;
   constexpr uint24_t Wave_Top = 0x024B66;
   constexpr uint24_t Wave_Bot = 0x025294;
-  constexpr uint24_t Magnets = 0x0259C2;
-  constexpr uint24_t Tile_0102 = 0x0264A4;
-  constexpr uint24_t Tile_0403 = 0x02663E;
-  constexpr uint24_t Tile_1112 = 0x0267D8;
-  constexpr uint24_t Tile_2221 = 0x026A1A;
-  constexpr uint24_t Tile_3132 = 0x026C5C;
-  constexpr uint24_t Tile_4142 = 0x026DF6;
-  constexpr uint24_t Tile_5152 = 0x027038;
-  constexpr uint24_t Tile_6162 = 0x0271D2;
-  constexpr uint24_t Cursor_X = 0x027414;
-  constexpr uint24_t Cursor_Y = 0x027476;
-  constexpr uint24_t Plus = 0x027484;
-  constexpr uint24_t Minus = 0x02749E;
+  constexpr uint24_t Wave_Left = 0x0259C2;
+  constexpr uint24_t Wave_Right = 0x025FA0;
+  constexpr uint24_t Magnets = 0x02657E;
+  constexpr uint24_t InGame = 0x027060;
+  constexpr uint24_t Tile_0102 = 0x02844E;
+  constexpr uint24_t Tile_0403 = 0x0285E8;
+  constexpr uint24_t Tile_1112 = 0x028782;
+  constexpr uint24_t Tile_2221 = 0x0289C4;
+  constexpr uint24_t Tile_3132 = 0x028C06;
+  constexpr uint24_t Tile_4142 = 0x028DA0;
+  constexpr uint24_t Tile_5152 = 0x028FE2;
+  constexpr uint24_t Tile_6162 = 0x02917C;
+  constexpr uint24_t Cursor_X = 0x0293BE;
+  constexpr uint24_t Cursor_Y = 0x029420;
+  constexpr uint24_t Plus = 0x02942E;
+  constexpr uint24_t Minus = 0x029448;
 }
 
