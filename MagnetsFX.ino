@@ -24,12 +24,6 @@
 extern ArduboyGBase_Config<ABG_Mode::L4_Triplane> a;
 decltype(a) a;
 
-#define SYNTHU_IMPLEMENTATION
-#define SYNTHU_NUM_CHANNELS 6
-#define SYNTHU_UPDATE_EVERY_N_FRAMES 3
-#define SYNTHU_ENABLE_SFX 1
-#define SYNTHU_FX_READDATABYTES_FUNC FX::readDataBytes
-#include "src/utils/SynthU.hpp"
 #include "src/fonts/Font3x5.h"
 
 #include <stdio.h>
@@ -66,12 +60,7 @@ void setup() {
     
     FX::begin(FX_DATA_PAGE, FX_SAVE_PAGE);
     FX::loadGameState((uint8_t*)&cookie, sizeof(cookie));
-    
-    #ifndef DEBUG_SOUND
-        audioInit();
-        setAudioOn();
-    #endif
-    
+        
     #ifdef USE_LED
         deactivateLEDs();
     #endif
@@ -118,10 +107,6 @@ void loop() {
 
 
     }
-
-    #ifndef DEBUG_SOUND
-    audioUpdate();
-    #endif
 
     #ifdef USE_LED
 

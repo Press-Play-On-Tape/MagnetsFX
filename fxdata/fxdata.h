@@ -6,8 +6,8 @@ using uint24_t = __uint24;
 
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
-constexpr uint16_t FX_DATA_PAGE  = 0xfd70;
-constexpr uint24_t FX_DATA_BYTES = 163790;
+constexpr uint16_t FX_DATA_PAGE  = 0xfd6c;
+constexpr uint24_t FX_DATA_BYTES = 164738;
 
 constexpr uint16_t FX_SAVE_PAGE  = 0xfff0;
 constexpr uint24_t FX_SAVE_BYTES = 2;
@@ -81,42 +81,42 @@ namespace Constants
 namespace Images
 {
   constexpr uint24_t PPOT = 0x0190A5;
-  constexpr uint24_t Sound_Volume_Grey = 0x01C0A7;
-  constexpr uint24_t Sound_Volume_White = 0x01C8E9;
-  constexpr uint24_t Sound_Checkbox = 0x01D12B;
-  constexpr uint24_t Title = 0x01D139;
-  constexpr uint24_t Select = 0x01F9BB;
-  constexpr uint24_t Hooray_00 = 0x021B7D;
-  constexpr uint24_t Hooray_01 = 0x021D2F;
-  constexpr uint24_t Hooray_02 = 0x021F71;
-  constexpr uint24_t Hooray_03 = 0x0221B3;
-  constexpr uint24_t Hooray_04 = 0x02234D;
-  constexpr uint24_t Hooray_05 = 0x0224FF;
-  constexpr uint24_t Hooray_06 = 0x0226B1;
-  constexpr uint24_t HUD = 0x02275B;
-  constexpr uint24_t Score_Numbers_Bottom = 0x022985;
-  constexpr uint24_t Score_Numbers_Left = 0x022A83;
-  constexpr uint24_t Score_Numbers_Right = 0x022B81;
-  constexpr uint24_t Arrows = 0x022C7F;
-  constexpr uint24_t HighScores = 0x022CCF;
-  constexpr uint24_t Dealer = 0x0236C1;
-  constexpr uint24_t Wave_Top = 0x0236D2;
-  constexpr uint24_t Wave_Bot = 0x023E00;
-  constexpr uint24_t Wave_Left = 0x02452E;
-  constexpr uint24_t Wave_Right = 0x024B0C;
-  constexpr uint24_t Magnets = 0x0250EA;
-  constexpr uint24_t InGame = 0x025BCC;
-  constexpr uint24_t Tile_0102 = 0x026FBA;
-  constexpr uint24_t Tile_0403 = 0x027154;
-  constexpr uint24_t Tile_1112 = 0x0272EE;
-  constexpr uint24_t Tile_2221 = 0x027530;
-  constexpr uint24_t Tile_3132 = 0x027772;
-  constexpr uint24_t Tile_4142 = 0x02790C;
-  constexpr uint24_t Tile_5152 = 0x027B4E;
-  constexpr uint24_t Tile_6162 = 0x027CE8;
-  constexpr uint24_t Cursor_X = 0x027F2A;
-  constexpr uint24_t Cursor_Y = 0x027F8C;
-  constexpr uint24_t Plus = 0x027F9A;
-  constexpr uint24_t Minus = 0x027FB4;
+  constexpr uint24_t Sound_Checkbox = 0x01C0A7;
+  constexpr uint24_t Title = 0x01C0B5;
+  constexpr uint24_t Select = 0x01E937;
+  constexpr uint24_t Hooray_00 = 0x020AF9;
+  constexpr uint24_t Hooray_01 = 0x020CAB;
+  constexpr uint24_t Hooray_02 = 0x020EED;
+  constexpr uint24_t Hooray_03 = 0x02112F;
+  constexpr uint24_t Hooray_04 = 0x0212C9;
+  constexpr uint24_t Hooray_05 = 0x02147B;
+  constexpr uint24_t Hooray_06 = 0x02162D;
+  constexpr uint24_t HUD = 0x0216D7;
+  constexpr uint24_t Score_Numbers_Bottom = 0x021901;
+  constexpr uint24_t Score_Numbers_Left = 0x0219FF;
+  constexpr uint24_t Score_Numbers_Right = 0x021AFD;
+  constexpr uint24_t Arrows = 0x021BFB;
+  constexpr uint24_t HighScores = 0x021C4B;
+  constexpr uint24_t Dealer = 0x02263D;
+  constexpr uint24_t Wave_Top = 0x02264E;
+  constexpr uint24_t Wave_Bot = 0x022D7C;
+  constexpr uint24_t Wave_Left = 0x0234AA;
+  constexpr uint24_t Wave_Right = 0x023A88;
+  constexpr uint24_t Magnets = 0x024066;
+  constexpr uint24_t InGame = 0x024B48;
+  constexpr uint24_t InGame_Solid = 0x025F36;
+  constexpr uint24_t Tile_0102 = 0x027360;
+  constexpr uint24_t Tile_0403 = 0x0274FA;
+  constexpr uint24_t Tile_1112 = 0x027694;
+  constexpr uint24_t Tile_2221 = 0x0278D6;
+  constexpr uint24_t Tile_3132 = 0x027B18;
+  constexpr uint24_t Tile_4142 = 0x027CB2;
+  constexpr uint24_t Tile_5152 = 0x027EF4;
+  constexpr uint24_t Tile_6162 = 0x02808E;
+  constexpr uint24_t Cursor_X = 0x0282D0;
+  constexpr uint24_t Cursor_Y = 0x028332;
+  constexpr uint24_t Plus = 0x028340;
+  constexpr uint24_t Minus = 0x02835A;
+  constexpr uint24_t Arrow = 0x028374;
 }
 

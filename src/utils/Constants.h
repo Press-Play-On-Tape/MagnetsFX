@@ -7,7 +7,7 @@
 #define DEBUG_PRINT    Serial.print
 #define DEBUG_PRINTLN  Serial.println
 
-#define DEBUG
+#define _DEBUG
 #define DEBUG_FIXED_PUZZLE
 #define _DEBUG_FIXED_RAND
 #define _DEBUG_SOUND

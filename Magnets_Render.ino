@@ -8,6 +8,11 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
     uint8_t xOffset_Cols[] = { 11, 10 };
     uint8_t yOffset_Rows[] = { 10, 9 };
+    // uint8_t xOffset_Cols[] = { 10, 11 };
+    // uint8_t yOffset_Rows[] = { 9, 10 };
+    uint8_t xOffset_Numbers = 0;
+    uint8_t yOffset_Numbers = 0;
+    uint8_t yOffset_Overall = 0;
 
     if (frameCount % 64 < 32 && gameState == GameState::Play) {
 
@@ -15,8 +20,140 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
     }
 
-    uint8_t xOffset = xOffset_Cols[game.getGameSize()];
-    uint8_t yOffset = yOffset_Rows[game.getGameSize()];
+
+    // Determine overall Y offset ..
+
+    switch (game.getRenderSize()) {
+
+        case RenderSize::Small:
+
+            switch (game.getGameSize()) {
+                
+                case GameSize::Small:
+                case GameSize::Medium:
+
+                    yOffset_Overall = 0;
+                    break;
+                
+                case GameSize::Large:
+
+                    switch (game.getY()) {
+                        
+                        case 0 ... 5:       
+                            yOffset_Overall = 0;
+                            break;
+
+                        case 6:             
+                            yOffset_Overall = 6;
+                            break;
+
+                        default:            
+                            yOffset_Overall = 12;
+                            break;
+
+                    }
+
+                    break;
+                    
+            } 
+
+            break;
+
+        case RenderSize::Large:
+
+            switch (game.getGameSize()) {
+                
+                case GameSize::Small:
+
+                    yOffset_Overall = 0;
+                    break;
+
+                case GameSize::Medium:
+
+                    switch (game.getY()) {
+                        
+                        case 0 ... 5:       
+                            yOffset_Overall = 0;
+                            break;
+
+                        case 6:             
+                            yOffset_Overall = 9;
+                            break;
+
+                        default:            
+                            yOffset_Overall = 18;
+                            break;
+
+                    }
+
+                    break;
+                
+                case GameSize::Large:
+
+                    switch (game.getY()) {
+                        
+                        case 0 ... 3:       
+                            yOffset_Overall = 0;
+                            break;
+
+                        case 4 ...7:             
+                            yOffset_Overall = (game.getY() - 4) * 9;
+                            break;
+
+                        default:            
+                            yOffset_Overall = 36;
+                            break;
+
+                    }
+
+                    break;
+                    
+            } 
+
+            break;
+
+    }
+// Serial.print(game.getY());
+// Serial.print(" ");
+// Serial.println(yOffset_Overall);
+
+
+
+    // Determine numbers offset ..
+
+    // switch (game.getRenderSize()) {
+
+    //     case RenderSize::Small:
+    //     case RenderSize::Large:
+    // Serial.println(static_cast<uint8_t>(game.getRenderSize()));
+            xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(game.getRenderSize())];
+            yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(game.getRenderSize())];
+    //         break;
+
+    //     default:
+
+    //         switch (game.getGameSize()) {
+
+    //             case GameSize::Small:
+    //                 xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(RenderSize::Large)];
+    //                 yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(RenderSize::Large)];
+    //                 break;
+
+    //             case GameSize::Medium:
+    //                 xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(RenderSize::Large)];
+    //                 yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(RenderSize::Large)];
+    //                 break;
+
+    //             case GameSize::Large:
+    //                 xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(RenderSize::Small)];
+    //                 yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(RenderSize::Small)];
+    //                 break;
+
+    //         }
+
+    //         break;
+
+    // }
 
 
     // + Cols
@@ -30,12 +167,12 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
                 
             if (val == sol) {
 
-                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 0, Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(xOffset_Numbers + ((i - 1) * game.getSpacing()), -yOffset_Overall, Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
             }
             else {
 
-                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 0, Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(xOffset_Numbers + ((i - 1) * game.getSpacing()), -yOffset_Overall, Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
 
             }
 
@@ -55,12 +192,12 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
             if (val == sol) {
 
-                SpritesU::drawOverwrite(2, yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(2, -yOffset_Overall + yOffset_Numbers + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
             }
             else {
 
-                SpritesU::drawOverwrite(2, yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(2, -yOffset_Overall + yOffset_Numbers + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
 
             }
 
@@ -80,12 +217,12 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
             if (val == sol) {
 
-                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(xOffset_Numbers + ((i - 1) * game.getSpacing()), -yOffset_Overall + 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
             }
             else {
 
-                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(xOffset_Numbers + ((i - 1) * game.getSpacing()), -yOffset_Overall + 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
 
             }
 
@@ -105,12 +242,12 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
             if (val == sol) {
 
-                SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), -yOffset_Overall + yOffset_Numbers + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
             }
             else {
 
-                SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), -yOffset_Overall + yOffset_Numbers + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
 
             }
 
@@ -118,8 +255,8 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
     }
 
-    SpritesU::drawOverwriteFX(0, 0, Images::Plus, currentPlane);
-    SpritesU::drawOverwriteFX(9 + (game.getWidth() * game.getSpacing()), 9 + (game.getHeight() * game.getSpacing()), Images::Minus, currentPlane);
+    SpritesU::drawOverwriteFX(0, -yOffset_Overall, Images::Plus, currentPlane);
+    SpritesU::drawOverwriteFX(9 + (game.getWidth() * game.getSpacing()), -yOffset_Overall + 9 + (game.getHeight() * game.getSpacing()), Images::Minus, currentPlane);
 
 
 
@@ -128,52 +265,66 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
         for (uint8_t x = 1; x < game.getWidth() + 1; x++) {
 
             uint8_t i = game.puzzle[y][x];
-            uint8_t tileSet = game.getGameSize() == GameSize::Small ? 0 : 6;
+            uint8_t tileSet = 0;//soundSettings.getRenderSize() == RenderSize::Large ? 0 : 6;
+
+
+            switch (game.getRenderSize()) {
+
+                case RenderSize::Small:
+                    tileSet = 6;
+                    break;
+
+                case RenderSize::Large:
+                    tileSet = 0;
+                    break;
+
+            }
+
 
             switch (i) {
 
                 case 1:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() - 1 == x && game.getY() == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_0102, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_0102, tileSet + currentPlane);
                     x++;
                     break;
 
                 case 4:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() - 1 == x && game.getY() == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_0403, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_0403, tileSet + currentPlane);
                     x++;
                     break;
 
                 case 11:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() == x && game.getY() - 1 == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_1112, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_1112, tileSet + currentPlane);
                     break;
 
                 case 22:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() == x && game.getY() - 1 == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_2221, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_2221, tileSet + currentPlane);
                     break;
 
                 case 31:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() - 1 == x && game.getY() == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_3132, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_3132, tileSet + currentPlane);
                     x++;
                     break;
 
                 case 41:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() == x && game.getY() - 1 == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_4142, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_4142, tileSet + currentPlane);
                     break;
 
                 case 51:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() - 1 == x && game.getY() == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_5152, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_5152, tileSet + currentPlane);
                     x++;
                     break;
 
                 case 61:
                     if (flash && ((game.getX() == x && game.getY() == y) || (game.getX() == x && game.getY() - 1 == y))) { tileSet = tileSet + 3; }
-                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), 9 + ((y - 1) * game.getSpacing()), Images::Tile_6162, tileSet + currentPlane);
+                    SpritesU::drawPlusMaskFX(9 + ((x - 1) * game.getSpacing()), -yOffset_Overall + 9 + ((y - 1) * game.getSpacing()), Images::Tile_6162, tileSet + currentPlane);
                     break;
 
             }
@@ -184,13 +335,13 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
     if (renderGuides) {
 
-        uint8_t tileSet = game.getGameSize() == GameSize::Small ? 0 : 3;
+        uint8_t tileSet = game.getRenderSize() == RenderSize::Large ? 0 : 3;
 
-        SpritesU::drawPlusMaskFX(7, game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
-        SpritesU::drawPlusMaskFX(9 + (game.getWidth() * game.getSpacing()), game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(7, -yOffset_Overall + game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(9 + (game.getWidth() * game.getSpacing()), -yOffset_Overall + game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
 
-        SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), 7, Images::Cursor_X, tileSet + currentPlane);
-        SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), 9 + (game.getHeight() * game.getSpacing()), Images::Cursor_X, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), -yOffset_Overall + 7, Images::Cursor_X, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), -yOffset_Overall + 9 + (game.getHeight() * game.getSpacing()), Images::Cursor_X, tileSet + currentPlane);
 
     }
 

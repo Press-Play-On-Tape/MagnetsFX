@@ -449,7 +449,14 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
     switch (gameState) {
 
         case GameState::Play:
-            SpritesU::drawPlusMaskFX(92, 3, Images::InGame, currentPlane);
+
+            if (game.renderMenu()) {
+                SpritesU::drawPlusMaskFX(92, 3, Images::InGame, currentPlane);
+            }
+            else {
+                SpritesU::drawOverwriteFX(123, 1, Images::Arrow, currentPlane);
+            }
+
             renderGrid(currentPlane, true);
             break;
 
@@ -479,8 +486,17 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             break;
 
         case GameState::Play_Menu0 ... GameState::Play_Menu4:
-            SpritesU::drawPlusMaskFX(92, 3, Images::InGame, ((static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Menu0)) * 3) + currentPlane);
+
+            if (!(game.getRenderSize() == RenderSize::Large && game.getGameSize() == GameSize::Large)) {
+                SpritesU::drawPlusMaskFX(92, 3, Images::InGame, ((static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Menu0)) * 3) + currentPlane);
+            }
+
             renderGrid(currentPlane, false);
+
+            if (game.getRenderSize() == RenderSize::Large && game.getGameSize() == GameSize::Large) {
+                SpritesU::drawOverwriteFX(128 - 43, 0, Images::InGame_Solid, ((static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Menu0)) * 3) + currentPlane);
+            }
+
             break;
 
         default:

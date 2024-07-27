@@ -9,19 +9,13 @@
 
 struct SoundSettings {
 
-    bool music = true;
-    bool sfx = true;
     bool led = false;
-    uint8_t volume = 7;
+    RenderSize renderSize = RenderSize::Auto;
 
-    bool getLED()                   { return this->led; }
-    bool getMusic()                 { return this->music; }
-    bool getSFX()                   { return this->sfx; }
-    uint8_t getVolume()             { return this->volume; }
+    bool getLED()                           { return this->led; }
+    RenderSize getRenderSize()              { return this->renderSize; }
 
-    void setLED(bool val)           { this->led = val; }
-    void setMusic(bool val)         { this->music = val; }
-    void setSFX(bool val)           { this->sfx = val; }
-    void setVolume(uint8_t val)     { this->volume = val; }
+    void setLED(bool val)                   { this->led = val; }
+    void setRenderSize(RenderSize val)      { this->renderSize = val; }
 
 };

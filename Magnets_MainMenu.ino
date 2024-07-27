@@ -38,6 +38,7 @@ void title_Update() {
             if (justPressed & A_BUTTON) {                
                 titleAnimations = 300;
                 gameState = GameState::Title_SelectSize;
+                game.setRenderSize(soundSettings.getRenderSize());
             }
 
             break;
@@ -96,137 +97,113 @@ void title_Update() {
             if (justPressed & B_BUTTON) {
                 gameState = GameState::Title_SelectSize;
             }
+
             break;
 
-        #ifndef DEBUG_SOUND
+        case GameState::Title_Options_LEDS:
+            
+            if (justPressed & A_BUTTON) {
 
-            case GameState::Title_Options_LEDS:
+                soundSettings.setLED(!soundSettings.getLED());
+
+            }
+            
+            if (justPressed & B_BUTTON) {
+
+                gameState = GameState::Title_Options;
+                saveCookie(true);
                 
-                if (justPressed & A_BUTTON) {
+            }
+            
+            if (justPressed & DOWN_BUTTON) {
 
-                    soundSettings.setLED(!soundSettings.getLED());
+                gameState++;
 
-                }
+            }
+
+            break;
+
+        case GameState::Title_Options_Small:
+            
+            if (justPressed & A_BUTTON) {
+
+                soundSettings.setRenderSize(RenderSize::Small);
+
+            }
+            
+            if (justPressed & B_BUTTON) {
+
+                gameState = GameState::Title_Options;
+                saveCookie(true);
                 
-                if (justPressed & B_BUTTON) {
+            }
+            
+            if (justPressed & DOWN_BUTTON) {
 
-                    gameState = GameState::Title_Options;
-                    saveCookie(true);
-                    
-                }
+                gameState++;
+
+            }
+
+            if (justPressed & UP_BUTTON) {
+
+                gameState--;
+
+            }
+
+            break;
+
+        case GameState::Title_Options_Large:
+            
+            if (justPressed & A_BUTTON) {
+
+                soundSettings.setRenderSize(RenderSize::Large);
+
+            }
+            
+            if (justPressed & B_BUTTON) {
+
+                gameState = GameState::Title_Options;
+                saveCookie(true);
                 
-                if (justPressed & DOWN_BUTTON) {
+            }
+            
+            if (justPressed & DOWN_BUTTON) {
 
-                    gameState++;
+                gameState++;
 
-                }
+            }
 
-                break;
+            if (justPressed & UP_BUTTON) {
 
-            case GameState::Title_Options_Music:
+                gameState--;
+
+            }
+
+            break;
+
+        case GameState::Title_Options_Auto:
+            
+            if (justPressed & A_BUTTON) {
+
+                soundSettings.setRenderSize(RenderSize::Auto);
+
+            }
+            
+            if (justPressed & B_BUTTON) {
+
+                gameState = GameState::Title_Options;
+                saveCookie(true);
                 
-                if (justPressed & A_BUTTON) {
+            }
+            
+            if (justPressed & UP_BUTTON) {
 
-                    soundSettings.setMusic(!soundSettings.getMusic());
-                    if (soundSettings.getMusic()) {
-                        playMusic();
-                    }
-                    else {
-                        SynthU::stop();
-                    }
+                gameState--;
 
-                }
-                
-                if (justPressed & B_BUTTON) {
+            }
 
-                    gameState = GameState::Title_Options;
-                    saveCookie(true);
-                    
-                }
-                
-                if (justPressed & DOWN_BUTTON) {
+            break;
 
-                    gameState++;
-
-                }
-                
-                if (justPressed & UP_BUTTON) {
-
-                    gameState--;
-
-                }
-
-                break;
-                        
-            case GameState::Title_Options_SFX:
-                
-                if (justPressed & A_BUTTON) {
-
-                    soundSettings.setSFX(!soundSettings.getSFX());
-
-                }
-                
-                if (justPressed & B_BUTTON) {
-
-                    gameState = GameState::Title_Options;
-                    saveCookie(true);
-
-                }
-                
-                if (justPressed & UP_BUTTON) {
-
-                    gameState--;
-
-                }
-                
-                if (justPressed & DOWN_BUTTON) {
-
-                    gameState++;
-
-                }
-
-                break;
-
-            case GameState::Title_Options_Volume:
-                
-                if (justPressed & LEFT_BUTTON) {
-
-                    if (soundSettings.getVolume() > 0) {
-
-                        soundSettings.setVolume(soundSettings.getVolume() - 1);
-                        SynthU::setVolume(soundSettings.getVolume() * 2);
-
-                    }
-
-                }
-                
-                if (justPressed & RIGHT_BUTTON) {
-
-                    if (soundSettings.getVolume() < 7) {
-
-                        soundSettings.setVolume(soundSettings.getVolume() + 1);
-                        SynthU::setVolume(soundSettings.getVolume() * 2);
-
-                    }
-
-                }
-
-                if (justPressed & B_BUTTON) {
-
-                    gameState = GameState::Title_Options;
-                    saveCookie(true);
-
-                }
-                
-                if (justPressed & UP_BUTTON) {
-
-                    gameState = static_cast<GameState>(static_cast<uint8_t>(gameState) - 1);
-
-                }
-
-                break;
-
-        #endif
         
     }
 
@@ -254,48 +231,19 @@ void title(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
     switch (gameState) {
         
-        case GameState::Title_Options_LEDS ... GameState::Title_Options_SFX:
+        case GameState::Title_Options_LEDS ... GameState::Title_Options_Auto:
             {
                 renderCommon(currentPlane);
 
-                if (soundSettings.getLED())      SpritesU::drawPlusMaskFX(88, 19, Images::Sound_Checkbox, currentPlane);
-                if (soundSettings.getMusic())    SpritesU::drawPlusMaskFX(88, 29, Images::Sound_Checkbox, currentPlane);
-                if (soundSettings.getSFX())      SpritesU::drawPlusMaskFX(88, 39, Images::Sound_Checkbox, currentPlane);
-
-                uint8_t volume = (soundSettings.getMusic() || soundSettings.getSFX()) ? soundSettings.getVolume() : 0;
-
-                if (soundSettings.getMusic() || soundSettings.getSFX()) {
-                    SpritesU::drawPlusMaskFX(92, 46, Images::Sound_Volume_Grey, (soundSettings.getVolume() * 3) + currentPlane);
-                }
-                else {
-                    SpritesU::drawPlusMaskFX(92, 46, Images::Sound_Volume_Grey, currentPlane);
-                }
+                if (soundSettings.getLED())                               SpritesU::drawPlusMaskFX(88, 18, Images::Sound_Checkbox, currentPlane);
+                if (soundSettings.getRenderSize() == RenderSize::Small)   SpritesU::drawPlusMaskFX(88, 38, Images::Sound_Checkbox, currentPlane);
+                if (soundSettings.getRenderSize() == RenderSize::Large)   SpritesU::drawPlusMaskFX(88, 48, Images::Sound_Checkbox, currentPlane);
+                if (soundSettings.getRenderSize() == RenderSize::Auto)    SpritesU::drawPlusMaskFX(88, 58, Images::Sound_Checkbox, currentPlane);
 
             }
 
             break;     
         
-        case GameState::Title_Options_Volume:
-            {
-                renderCommon(currentPlane);
-
-                if (soundSettings.getLED())      SpritesU::drawPlusMaskFX(88, 19, Images::Sound_Checkbox, currentPlane);
-                if (soundSettings.getMusic())    SpritesU::drawPlusMaskFX(88, 29, Images::Sound_Checkbox, currentPlane);
-                if (soundSettings.getSFX())      SpritesU::drawPlusMaskFX(88, 39, Images::Sound_Checkbox, currentPlane);
-
-                uint8_t volume = (soundSettings.getMusic() || soundSettings.getSFX()) ? soundSettings.getVolume() : 0;
-
-                if (soundSettings.getMusic() || soundSettings.getSFX()) {
-                    SpritesU::drawPlusMaskFX(92, 46, Images::Sound_Volume_White, (soundSettings.getVolume() * 3) + currentPlane);
-                }
-                else {
-                    SpritesU::drawPlusMaskFX(92, 46, Images::Sound_Volume_White, currentPlane);
-                }
-
-            }
-
-            break;    
-
         case GameState::Title_SelectSize: 
             renderWaves(currentPlane);
             SpritesU::drawPlusMaskFX(80, 21, Images::Select, (game.getGameSize() * 3) + currentPlane);
@@ -353,9 +301,9 @@ void renderCommon(uint8_t currentPlane) {
 
             break;
 
-        case  GameState::Title_Options_LEDS ... GameState::Title_Options_Volume:
+        case  GameState::Title_Options_LEDS ... GameState::Title_Options_Auto:
 
-            SpritesU::drawPlusMaskFX(80, 16, Images::Title, (3 * (static_cast<uint8_t>(gameState) - 6)) + currentPlane);
+            SpritesU::drawPlusMaskFX(80, 15, Images::Title, (3 * (static_cast<uint8_t>(gameState) - 6)) + currentPlane);
             break;
 
     }

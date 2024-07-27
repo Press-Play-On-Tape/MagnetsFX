@@ -25,7 +25,7 @@ struct Game {
 
         GameSize gameSize = GameSize::Small;
         GameLevel gameLevel = GameLevel::Easy;
-        GameState prevGameState = GameState::SplashScreen_Start;
+        RenderSize renderSize = RenderSize::Large;
 
     public:
 
@@ -33,18 +33,108 @@ struct Game {
         uint8_t getHeight()                             { return this->heights[this->gameSize]; }
         uint8_t getX()                                  { return this->x; }
         uint8_t getY()                                  { return this->y; }
-        uint8_t getSpacing()                            { return this->spacings[this->gameSize]; }
         bool getComplete()                              { return this->complete; }
         GameSize getGameSize()                          { return this->gameSize; }
         GameLevel getGameLevel()                        { return this->gameLevel; }
-        GameState getPrevGameState()                    { return this->prevGameState; }
 
         void setX(uint8_t val)                          { this->x = val; }
         void setY(uint8_t val)                          { this->y = val; }
         void setComplete(bool val)                      { this->complete = val; }
         void setGameSize(GameSize val)                  { this->gameSize = val; }
         void setGameLevel(GameLevel val)                { this->gameLevel = val; }
-        void setPrevGameState(GameState val)            { this->prevGameState = val; }
+        void setRenderSize(RenderSize val)              { this->renderSize = val; }
+
+
+        RenderSize getRenderSize() { 
+
+            switch (this->renderSize) {
+
+                case RenderSize::Small:
+                case RenderSize::Large:
+                    return this->renderSize;
+
+                default:
+
+                    switch (this->getGameSize()) {
+
+                        case GameSize::Small:
+                        case GameSize::Medium:
+                            return RenderSize::Large;
+
+                        case GameSize::Large:
+                            return RenderSize::Small;
+
+                    }
+
+                    break;
+
+            }            
+            
+            return RenderSize::Small;
+
+        }
+
+        uint8_t getSpacing() { 
+
+            switch (this->getRenderSize()) {
+
+                case RenderSize::Small:
+                    return 6;
+
+                case RenderSize::Large:
+                    return 9;
+
+                default:
+
+                    switch (this->getGameSize()) {
+
+                        case GameSize::Small:
+                            return 9;
+
+                        case GameSize::Medium:
+                            return 9;
+
+                        case GameSize::Large:
+                            return 6;
+
+                    }
+
+                    break;
+
+            }            
+            
+            return 9;
+
+        }
+
+        bool renderMenu() { 
+
+            switch (this->getGameSize()) {
+
+                case GameSize::Small:
+                case GameSize::Medium:
+                    return true;
+
+                default:
+
+                    switch (this->getRenderSize()) {
+
+                        case RenderSize::Small:
+                        case RenderSize::Auto:
+                            return true;
+
+                        case RenderSize::Large:
+                            return false;
+
+                    }
+
+                    break;
+
+            }            
+            
+            return 9;
+
+        }
 
         void setup() {
 

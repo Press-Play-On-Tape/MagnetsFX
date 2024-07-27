@@ -113,8 +113,6 @@ deleteFile(BASE + 'Images.hpp')
 deleteFile(BASE + '6x5.hpp')
 
 convert_header(IMAGES + 'Titles/PPOT.png',                                                     BASE + 'Images.hpp', 'PPOT', 4, 128, 64)
-convert_header(IMAGES + 'Titles/Sound_Volume_Grey.png',                                        BASE + 'Images.hpp', 'Sound_Volume_Grey', 4, 22, 16)
-convert_header(IMAGES + 'Titles/Sound_Volume_White.png',                                       BASE + 'Images.hpp', 'Sound_Volume_White', 4, 22, 16)
 convert_header(IMAGES + 'Titles/Sound_Checkbox.png',                                           BASE + 'Images.hpp', 'Sound_Checkbox', 4)
 convert_header(IMAGES + 'Titles/Title.png',                                                    BASE + 'Images.hpp', 'Title', 4, 48, 48, maskImage=False)
 convert_header(IMAGES + 'Titles/Select.png',                                                   BASE + 'Images.hpp', 'Select', 4, 48, 40, maskImage=False)
@@ -142,6 +140,7 @@ convert_header(IMAGES + 'Titles/Wave_Left.png',                                 
 convert_header(IMAGES + 'Titles/Wave_Right.png',                                               BASE + 'Images.hpp', 'Wave_Right', 4)
 convert_header(IMAGES + 'Titles/Magnets.png',                                                  BASE + 'Images.hpp', 'Magnets', 4)
 convert_header(IMAGES + 'Titles/InGame.png',                                                   BASE + 'Images.hpp', 'InGame', 4, 34, 40)
+convert_header(IMAGES + 'Titles/InGame_Solid.png',                                             BASE + 'Images.hpp', 'InGame_Solid', 4, 43, 64)
 
 convert_header(IMAGES + 'Tiles/Tile_0102.png',                                                 BASE + 'Images.hpp', 'Tile_0102', 4, 17, 8)
 convert_header(IMAGES + 'Tiles/Tile_0403.png',                                                 BASE + 'Images.hpp', 'Tile_0403', 4, 17, 8)
@@ -156,3 +155,4 @@ convert_header(IMAGES + 'Cursor_X.png',                                         
 convert_header(IMAGES + 'Cursor_Y.png',                                                        BASE + 'Images.hpp', 'Cursor_Y', 4, 1, 8)
 convert_header(IMAGES + 'Plus.png',                                                            BASE + 'Images.hpp', 'Plus', 4)
 convert_header(IMAGES + 'Minus.png',                                                           BASE + 'Images.hpp', 'Minus', 4)
+convert_header(IMAGES + 'Titles/Arrow.png',                                                    BASE + 'Images.hpp', 'Arrow', 4)

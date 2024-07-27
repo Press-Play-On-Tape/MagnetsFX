@@ -40,9 +40,9 @@ enum class GameState : uint8_t {
         Title_Play = Title_Start,
         Title_Options,
         Title_Options_LEDS,
-        Title_Options_Music,
-        Title_Options_SFX,
-        Title_Options_Volume,
+        Title_Options_Small,
+        Title_Options_Large,
+        Title_Options_Auto,
         Title_SelectSize,
         Title_SelectHardness,
     Title_End,
@@ -91,6 +91,12 @@ enum GameSize : uint8_t {
 enum GameLevel : uint8_t { 
     Easy,
     Hard
+};
+
+enum class RenderSize : uint8_t { 
+    Large,
+    Small,
+    Auto
 };
 
 enum Tiles : uint8_t {
