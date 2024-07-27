@@ -82,11 +82,11 @@ void title_Update() {
         case GameState::Title_SelectHardness:
 
             if (justPressed & UP_BUTTON) {
-                game.setGameHard(GameHard::Easy);
+                game.setGameLevel(GameLevel::Easy);
             }
 
             if (justPressed & DOWN_BUTTON) {
-                game.setGameHard(GameHard::Hard);
+                game.setGameLevel(GameLevel::Hard);
             }
 
             if (justPressed & A_BUTTON) {
@@ -303,7 +303,7 @@ void title(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
         case GameState::Title_SelectHardness: 
             renderWaves(currentPlane);
-            SpritesU::drawPlusMaskFX(80, 21, Images::Select, 9 + (game.getGameHard() * 3) + currentPlane);
+            SpritesU::drawPlusMaskFX(80, 21, Images::Select, 9 + (game.getGameLevel() * 3) + currentPlane);
             break;
 
         default:

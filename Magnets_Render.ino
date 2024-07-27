@@ -26,14 +26,18 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
         uint8_t val = game.puzzle[0][i];
         uint8_t sol = game.solution[0][i];
 
-        if (val == sol) {
+        if (sol != Constants::NoNumber) {
+                
+            if (val == sol) {
 
-            SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 0, Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 0, Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
-        }
-        else {
+            }
+            else {
 
-            SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 0, Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 0, Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+
+            }
 
         }
 
@@ -47,14 +51,18 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
         uint8_t val = game.puzzle[i][0];
         uint8_t sol = game.solution[i][0];
 
-        if (val == sol) {
+        if (sol != Constants::NoNumber) {
 
-            SpritesU::drawOverwrite(2, yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+            if (val == sol) {
 
-        }
-        else {
+                SpritesU::drawOverwrite(2, yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
-            SpritesU::drawOverwrite(2, yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+            }
+            else {
+
+                SpritesU::drawOverwrite(2, yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+
+            }
 
         }
 
@@ -68,14 +76,18 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
         uint8_t val = game.puzzle[game.getHeight() + 1][i];
         uint8_t sol = game.solution[game.getHeight() + 1][i];
 
-        if (val == sol) {
+        if (sol != Constants::NoNumber) {
 
-            SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+            if (val == sol) {
 
-        }
-        else {
+                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
-            SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+            }
+            else {
+
+                SpritesU::drawOverwrite(xOffset + ((i - 1) * game.getSpacing()), 11 + (game.getHeight() * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+
+            }
 
         }
 
@@ -89,14 +101,18 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
         uint8_t val = game.puzzle[i][game.getWidth() + 1];
         uint8_t sol = game.solution[i][game.getWidth() + 1];
         
-        if (val == sol) {
+        if (sol != Constants::NoNumber) {
 
-            SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
+            if (val == sol) {
 
-        }
-        else {
+                SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_W, (sol * 3) + currentPlane);
 
-            SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+            }
+            else {
+
+                SpritesU::drawOverwrite(12 + (game.getWidth() * game.getSpacing()), yOffset + ((i - 1) * game.getSpacing()), Images::Numbers_5x3_1D_G, (sol * 3) + currentPlane);
+
+            }
 
         }
 

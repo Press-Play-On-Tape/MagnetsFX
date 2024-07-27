@@ -19,18 +19,16 @@ struct Game {
         uint8_t heights[3] = { 5, 7, 9 };
         uint8_t spacings[3] = { 9, 6, 6 };
 
-        // uint16_t frameCount = 0;
         uint8_t x = 1;
         uint8_t y = 1;
         bool complete = false;
 
         GameSize gameSize = GameSize::Small;
-        GameHard gameHard = GameHard::Easy;
+        GameLevel gameLevel = GameLevel::Easy;
         GameState prevGameState = GameState::SplashScreen_Start;
 
     public:
 
-        // uint16_t getFrameCount()                        { return this->frameCount; }
         uint8_t getWidth()                              { return this->widths[this->gameSize]; }
         uint8_t getHeight()                             { return this->heights[this->gameSize]; }
         uint8_t getX()                                  { return this->x; }
@@ -38,28 +36,15 @@ struct Game {
         uint8_t getSpacing()                            { return this->spacings[this->gameSize]; }
         bool getComplete()                              { return this->complete; }
         GameSize getGameSize()                          { return this->gameSize; }
-        GameHard getGameHard()                          { return this->gameHard; }
+        GameLevel getGameLevel()                        { return this->gameLevel; }
         GameState getPrevGameState()                    { return this->prevGameState; }
 
-        // void setFrameCount(uint16_t val)                { this->frameCount = val; }
         void setX(uint8_t val)                          { this->x = val; }
         void setY(uint8_t val)                          { this->y = val; }
         void setComplete(bool val)                      { this->complete = val; }
         void setGameSize(GameSize val)                  { this->gameSize = val; }
-        void setGameHard(GameHard val)                  { this->gameHard = val; }
+        void setGameLevel(GameLevel val)                { this->gameLevel = val; }
         void setPrevGameState(GameState val)            { this->prevGameState = val; }
-
-        // void incFrameCount() {
-
-        //     this->frameCount++;
-
-        // }
-
-        // void resetFrameCount() {
-
-        //     this->frameCount = 0;
-            
-        // }
 
         void setup() {
 
@@ -128,11 +113,7 @@ struct Game {
 
             this->copy();
 
-            #ifdef DEBUG
-                this->printPuzzle();
-                this->printSolution();
-            #endif
-           
+
             #ifndef DEBUG_FIXED_PUZZLE
 
                 if (random(2) == 0) {
@@ -156,18 +137,14 @@ struct Game {
             #endif
 
             this->fillPuzzle();
+            this->updateNumbers_Solution(this->getGameLevel());
             this->printPuzzle();
             this->printSolution();
 
-            this->updateNumbers_Solution();
-
-// copy_SolutionToPuzzle();
-            // this->printPuzzle();
-            // this->printSolution();
         }
 
 
-        void updateNumbers_Solution() {
+        void updateNumbers_Solution(GameLevel gameLevel) {
 
             // Rows
 
@@ -208,6 +185,67 @@ struct Game {
 
                 this->solution[0][x] = plus;
                 this->solution[this->getHeight() + 1][x] = minus;
+
+            }
+
+            if (gameLevel == GameLevel::Hard) {
+
+                for (uint8_t i = 0; i < this->getWidth() / 2; i++) {
+
+                    while (true) {
+                        
+                        uint8_t x = random(this->getWidth()) + 1;
+                        
+                        if (this->solution[0][x] < Constants::NoNumber) {
+                            this->solution[0][x] = Constants::NoNumber;
+                            break;
+                        }
+
+                    }
+
+                }
+
+                for (uint8_t i = 0; i < this->getWidth() / 2; i++) {
+
+                    while (true) {
+                        
+                        uint8_t x = random(this->getWidth()) + 1;
+                        if (this->solution[this->getHeight() + 1][x] < Constants::NoNumber) {
+                            this->solution[this->getHeight() + 1][x] = Constants::NoNumber;
+                            break;
+                        }
+
+                    }
+
+                }
+
+                for (uint8_t i = 0; i < this->getHeight() / 2; i++) {
+
+                    while (true) {
+                        
+                        uint8_t y = random(this->getHeight()) + 1;
+                        if (this->solution[y][0] < Constants::NoNumber) {
+                            this->solution[y][0] = Constants::NoNumber;
+                            break;
+                        }
+
+                    }
+
+                }
+
+                for (uint8_t i = 0; i < this->getHeight() / 2; i++) {
+
+                    while (true) {
+                        
+                        uint8_t y = random(this->getHeight()) + 1;
+                        if (this->solution[y][this->getWidth() + 1] < Constants::NoNumber) {
+                            this->solution[y][this->getWidth() + 1] = Constants::NoNumber;
+                            break;
+                        }
+
+                    }
+
+                }
 
             }
 
@@ -905,13 +943,13 @@ struct Game {
 
             for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
 
-                if (this->solution[y][0] != this->puzzle[y][0]) {
+                if (this->solution[y][0] != Constants::NoNumber && this->solution[y][0] != this->puzzle[y][0]) {
 
                     return false;
                     
                 }
 
-                if (this->solution[y][this->getWidth() + 1] != this->puzzle[y][this->getWidth() + 1]) {
+                if (this->solution[y][this->getWidth() + 1] != Constants::NoNumber && this->solution[y][this->getWidth() + 1] != this->puzzle[y][this->getWidth() + 1]) {
 
                     return false;
                     
@@ -921,13 +959,13 @@ struct Game {
 
             for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
             
-                if (this->solution[0][x] != this->puzzle[0][x]) {
+                if (this->solution[0][x] != Constants::NoNumber && this->solution[0][x] != this->puzzle[0][x]) {
 
                     return false;
                     
                 }
 
-                if (this->solution[this->getHeight() + 1][0] != this->puzzle[this->getHeight() + 1][0]) {
+                if (this->solution[this->getHeight() + 1][x] != Constants::NoNumber && this->solution[this->getHeight() + 1][0] != this->puzzle[this->getHeight() + 1][0]) {
 
                     return false;
                     

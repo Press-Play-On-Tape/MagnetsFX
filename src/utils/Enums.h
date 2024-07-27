@@ -88,7 +88,7 @@ enum GameSize : uint8_t {
     Large
 };
 
-enum GameHard : uint8_t { 
+enum GameLevel : uint8_t { 
     Easy,
     Hard
 };

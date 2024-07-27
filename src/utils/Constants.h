@@ -7,7 +7,7 @@
 #define DEBUG_PRINT    Serial.print
 #define DEBUG_PRINTLN  Serial.println
 
-#define _DEBUG
+#define DEBUG
 #define DEBUG_FIXED_PUZZLE
 #define _DEBUG_FIXED_RAND
 #define _DEBUG_SOUND
@@ -57,5 +57,6 @@ namespace Constants {
     constexpr uint8_t Fill_Orient_1 = 10;
     constexpr uint8_t Fill_Orient_2 = 20;
     constexpr uint8_t ParticlesMax = 35;
+    constexpr uint8_t NoNumber = 255;
     
 };
