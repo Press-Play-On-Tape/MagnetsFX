@@ -9,9 +9,9 @@ struct Game {
 
     public:
 
-        uint8_t puzzle[9][10];
-        uint8_t solution[9][10];
-        uint8_t reset[9][10];
+        uint8_t puzzle[11][12];
+        uint8_t solution[11][12];
+        uint8_t reset[11][12];
         
     private:
 
@@ -910,9 +910,9 @@ struct Game {
 
         void copy_SolutionToPuzzle() {
             
-            for (uint8_t y = 0; y < 9; y++) {
+            for (uint8_t y = 0; y < this->getHeight() + 1; y++) {
 
-                for (uint8_t x = 0; x < 10; x++) {
+                for (uint8_t x = 0; x < this->getWidth() + 1; x++) {
                 
                     this->puzzle[y][x] = this->solution[y][x];
 

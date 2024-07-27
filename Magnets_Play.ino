@@ -436,11 +436,15 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
         xTop = xTop + 1;        if (xTop == 200) xTop = 0;
 
     }
+
+    if (game.getGameSize() != GameSize::Large) {
    
-    SpritesU::drawOverwriteFX(88, xTop, Images::Wave_Left, currentPlane);
-    SpritesU::drawOverwriteFX(88, xTop - 200, Images::Wave_Left, currentPlane);
-    SpritesU::drawOverwriteFX(108, xBot, Images::Wave_Right, currentPlane);
-    SpritesU::drawOverwriteFX(108, xBot + 200, Images::Wave_Right, currentPlane);
+        SpritesU::drawOverwriteFX(88, xTop, Images::Wave_Left, currentPlane);
+        SpritesU::drawOverwriteFX(88, xTop - 200, Images::Wave_Left, currentPlane);
+        SpritesU::drawOverwriteFX(108, xBot, Images::Wave_Right, currentPlane);
+        SpritesU::drawOverwriteFX(108, xBot + 200, Images::Wave_Right, currentPlane);
+
+    }
 
     switch (gameState) {
 

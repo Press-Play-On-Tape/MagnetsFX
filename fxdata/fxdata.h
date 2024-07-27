@@ -6,8 +6,8 @@ using uint24_t = __uint24;
 
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
-constexpr uint16_t FX_DATA_PAGE  = 0xfd74;
-constexpr uint24_t FX_DATA_BYTES = 162674;
+constexpr uint16_t FX_DATA_PAGE  = 0xfd70;
+constexpr uint24_t FX_DATA_BYTES = 163790;
 
 constexpr uint16_t FX_SAVE_PAGE  = 0xfff0;
 constexpr uint24_t FX_SAVE_BYTES = 2;
@@ -63,48 +63,60 @@ namespace Constants
   constexpr uint24_t temp_8x7_09 = 0x018B59;
   constexpr uint24_t temp_8x7_10 = 0x018B91;
   constexpr uint24_t temp_8x7_11 = 0x018BC9;
-  constexpr uint24_t temp_Levels = 0x018C01;
+  constexpr uint24_t temp_10x9_00 = 0x018C01;
+  constexpr uint24_t temp_10x9_01 = 0x018C5B;
+  constexpr uint24_t temp_10x9_02 = 0x018CB5;
+  constexpr uint24_t temp_10x9_03 = 0x018D0F;
+  constexpr uint24_t temp_10x9_04 = 0x018D69;
+  constexpr uint24_t temp_10x9_05 = 0x018DC3;
+  constexpr uint24_t temp_10x9_06 = 0x018E1D;
+  constexpr uint24_t temp_10x9_07 = 0x018E77;
+  constexpr uint24_t temp_10x9_08 = 0x018ED1;
+  constexpr uint24_t temp_10x9_09 = 0x018F2B;
+  constexpr uint24_t temp_10x9_10 = 0x018F85;
+  constexpr uint24_t temp_10x9_11 = 0x018FDF;
+  constexpr uint24_t temp_Levels = 0x019039;
 }
 
 namespace Images
 {
-  constexpr uint24_t PPOT = 0x018C49;
-  constexpr uint24_t Sound_Volume_Grey = 0x01BC4B;
-  constexpr uint24_t Sound_Volume_White = 0x01C48D;
-  constexpr uint24_t Sound_Checkbox = 0x01CCCF;
-  constexpr uint24_t Title = 0x01CCDD;
-  constexpr uint24_t Select = 0x01F55F;
-  constexpr uint24_t Hooray_00 = 0x021721;
-  constexpr uint24_t Hooray_01 = 0x0218D3;
-  constexpr uint24_t Hooray_02 = 0x021B15;
-  constexpr uint24_t Hooray_03 = 0x021D57;
-  constexpr uint24_t Hooray_04 = 0x021EF1;
-  constexpr uint24_t Hooray_05 = 0x0220A3;
-  constexpr uint24_t Hooray_06 = 0x022255;
-  constexpr uint24_t HUD = 0x0222FF;
-  constexpr uint24_t Score_Numbers_Bottom = 0x022529;
-  constexpr uint24_t Score_Numbers_Left = 0x022627;
-  constexpr uint24_t Score_Numbers_Right = 0x022725;
-  constexpr uint24_t Arrows = 0x022823;
-  constexpr uint24_t HighScores = 0x022873;
-  constexpr uint24_t Dealer = 0x023265;
-  constexpr uint24_t Wave_Top = 0x023276;
-  constexpr uint24_t Wave_Bot = 0x0239A4;
-  constexpr uint24_t Wave_Left = 0x0240D2;
-  constexpr uint24_t Wave_Right = 0x0246B0;
-  constexpr uint24_t Magnets = 0x024C8E;
-  constexpr uint24_t InGame = 0x025770;
-  constexpr uint24_t Tile_0102 = 0x026B5E;
-  constexpr uint24_t Tile_0403 = 0x026CF8;
-  constexpr uint24_t Tile_1112 = 0x026E92;
-  constexpr uint24_t Tile_2221 = 0x0270D4;
-  constexpr uint24_t Tile_3132 = 0x027316;
-  constexpr uint24_t Tile_4142 = 0x0274B0;
-  constexpr uint24_t Tile_5152 = 0x0276F2;
-  constexpr uint24_t Tile_6162 = 0x02788C;
-  constexpr uint24_t Cursor_X = 0x027ACE;
-  constexpr uint24_t Cursor_Y = 0x027B30;
-  constexpr uint24_t Plus = 0x027B3E;
-  constexpr uint24_t Minus = 0x027B58;
+  constexpr uint24_t PPOT = 0x0190A5;
+  constexpr uint24_t Sound_Volume_Grey = 0x01C0A7;
+  constexpr uint24_t Sound_Volume_White = 0x01C8E9;
+  constexpr uint24_t Sound_Checkbox = 0x01D12B;
+  constexpr uint24_t Title = 0x01D139;
+  constexpr uint24_t Select = 0x01F9BB;
+  constexpr uint24_t Hooray_00 = 0x021B7D;
+  constexpr uint24_t Hooray_01 = 0x021D2F;
+  constexpr uint24_t Hooray_02 = 0x021F71;
+  constexpr uint24_t Hooray_03 = 0x0221B3;
+  constexpr uint24_t Hooray_04 = 0x02234D;
+  constexpr uint24_t Hooray_05 = 0x0224FF;
+  constexpr uint24_t Hooray_06 = 0x0226B1;
+  constexpr uint24_t HUD = 0x02275B;
+  constexpr uint24_t Score_Numbers_Bottom = 0x022985;
+  constexpr uint24_t Score_Numbers_Left = 0x022A83;
+  constexpr uint24_t Score_Numbers_Right = 0x022B81;
+  constexpr uint24_t Arrows = 0x022C7F;
+  constexpr uint24_t HighScores = 0x022CCF;
+  constexpr uint24_t Dealer = 0x0236C1;
+  constexpr uint24_t Wave_Top = 0x0236D2;
+  constexpr uint24_t Wave_Bot = 0x023E00;
+  constexpr uint24_t Wave_Left = 0x02452E;
+  constexpr uint24_t Wave_Right = 0x024B0C;
+  constexpr uint24_t Magnets = 0x0250EA;
+  constexpr uint24_t InGame = 0x025BCC;
+  constexpr uint24_t Tile_0102 = 0x026FBA;
+  constexpr uint24_t Tile_0403 = 0x027154;
+  constexpr uint24_t Tile_1112 = 0x0272EE;
+  constexpr uint24_t Tile_2221 = 0x027530;
+  constexpr uint24_t Tile_3132 = 0x027772;
+  constexpr uint24_t Tile_4142 = 0x02790C;
+  constexpr uint24_t Tile_5152 = 0x027B4E;
+  constexpr uint24_t Tile_6162 = 0x027CE8;
+  constexpr uint24_t Cursor_X = 0x027F2A;
+  constexpr uint24_t Cursor_Y = 0x027F8C;
+  constexpr uint24_t Plus = 0x027F9A;
+  constexpr uint24_t Minus = 0x027FB4;
 }
 
