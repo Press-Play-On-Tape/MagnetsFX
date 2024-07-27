@@ -2,14 +2,14 @@
 
 
 
-void renderGrid(uint8_t currentPlane) {
+void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
     bool flash = false;
 
     uint8_t xOffset_Cols[] = { 11, 10 };
     uint8_t yOffset_Rows[] = { 10, 9 };
 
-    if (game.getFrameCount() % 64 < 32 && gameState == GameState::Play) {
+    if (frameCount % 64 < 32 && gameState == GameState::Play) {
 
         flash = true;
 
@@ -166,16 +166,16 @@ void renderGrid(uint8_t currentPlane) {
 
     }
 
+    if (renderGuides) {
 
-    uint8_t tileSet = game.getGameSize() == GameSize::Small ? 0 : 3;
+        uint8_t tileSet = game.getGameSize() == GameSize::Small ? 0 : 3;
 
-    SpritesU::drawPlusMaskFX(7, game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
-    SpritesU::drawPlusMaskFX(9 + (game.getWidth() * game.getSpacing()), game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(7, game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(9 + (game.getWidth() * game.getSpacing()), game.getY() * game.getSpacing(), Images::Cursor_Y, tileSet + currentPlane);
 
-    SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), 7, Images::Cursor_X, tileSet + currentPlane);
-    SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), 9 + (game.getHeight() * game.getSpacing()), Images::Cursor_X, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), 7, Images::Cursor_X, tileSet + currentPlane);
+        SpritesU::drawPlusMaskFX(game.getX() * game.getSpacing(), 9 + (game.getHeight() * game.getSpacing()), Images::Cursor_X, tileSet + currentPlane);
 
-
-
+    }
 
 }

@@ -26,12 +26,7 @@ void saveCookie(bool enableLEDs) {
 
     #ifdef USE_LED
     if (enableLEDs) {
-        #ifndef MICROCADE
-            a.setRGBled(RED_LED, 32);
-        #else
-            a.setRGBledGreenOff();
-            a.setRGBledBlueOff();
-        #endif
+        a.digitalWriteRGB(RED_LED, RGB_ON);
     }
     #endif
 
@@ -39,13 +34,7 @@ void saveCookie(bool enableLEDs) {
 
     #ifdef USE_LED
     if (enableLEDs) {
-        #ifndef MICROCADE
-            a.setRGBled(RED_LED, 0);
-            a.setRGBled(GREEN_LED, 32);
-        #else
-            a.setRGBledRedOff();
-            a.setRGBledGreenOn();
-        #endif
+        LED_Counter = 32;
     }
     #endif
 
@@ -54,13 +43,9 @@ void saveCookie(bool enableLEDs) {
 void deactivateLEDs() {
 
     #ifdef USE_LED
-        #ifndef MICROCADE
-            a.setRGBled(0, 0, 0);
-        #else
-            a.setRGBledRedOff();
-            a.setRGBledGreenOff();
-            a.setRGBledBlueOff();
-        #endif
+        a.digitalWriteRGB(RED_LED, RGB_OFF);
+        a.digitalWriteRGB(GREEN_LED, RGB_OFF);
+        a.digitalWriteRGB(BLUE_LED, RGB_OFF);
     #endif
 
 }

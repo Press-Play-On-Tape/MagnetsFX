@@ -37,19 +37,12 @@ enum class GameState : uint8_t {
 
     Title_Init,
     Title_Start,
-        Title_OptPlay = Title_Start,
-        Title_OptSound,
-        Title_OptCredits,
-        Title_OptResume,
-        Title_OptPlay2,
-        Title_OptSound2,
-        Title_OptSound_Music,
-        Title_OptSound_SFX,
-        Title_OptSound_Volume,
-        Title_OptSound_Music2,
-        Title_OptSound_SFX2,
-        Title_OptSound_Volume2,
-        Title_ShowInstructions,
+        Title_Play = Title_Start,
+        Title_Options,
+        Title_Options_LEDS,
+        Title_Options_Music,
+        Title_Options_SFX,
+        Title_Options_Volume,
         Title_SelectSize,
         Title_SelectHardness,
     Title_End,
@@ -57,6 +50,7 @@ enum class GameState : uint8_t {
     Play_Init,
     Play_Start,
         Play = Play_Start,
+        Play_Particles,
         Play_Menu0,
         Play_Menu1,
         Play_Menu2,
@@ -119,4 +113,10 @@ enum Tiles : uint8_t {
     Vertical_Neutral_Start = 41,
     Vertical_Neutral_End = 42,
 
+};
+
+enum ValidMove : uint8_t { 
+    Valid,
+    NotValid,
+    Neutral
 };

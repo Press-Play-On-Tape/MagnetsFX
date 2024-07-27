@@ -30,8 +30,6 @@ decltype(a) a;
 #define SYNTHU_ENABLE_SFX 1
 #define SYNTHU_FX_READDATABYTES_FUNC FX::readDataBytes
 #include "src/utils/SynthU.hpp"
-#define ABG_TIMER1
-
 #include "src/fonts/Font3x5.h"
 
 #include <stdio.h>
@@ -43,15 +41,22 @@ Game &game = cookie.game;
 SoundSettings &soundSettings = cookie.soundSettings;
 GameState gameState = GameState::SplashScreen_Start;
 
-uint8_t titleCounter = 0;
-int16_t instructions_Y = 0;
+uint16_t frameCount = 0;
 
 Font3x5 font3x5 = Font3x5();
+bool particlesNeedRendering = false;
+
+#ifdef PARTICLES
+Particle particles[Constants::ParticlesMax];
+#endif
 
 #ifdef DEBUG_FIXED_RAND
 uint16_t seed = 72;
 #endif
 
+#ifdef USE_LED
+uint8_t LED_Counter = 0;
+#endif
 
 void setup() {
 
@@ -61,12 +66,17 @@ void setup() {
     
     FX::begin(FX_DATA_PAGE, FX_SAVE_PAGE);
     FX::loadGameState((uint8_t*)&cookie, sizeof(cookie));
+    
     #ifndef DEBUG_SOUND
-    audioInit();
-    setAudioOn();
+        audioInit();
+        setAudioOn();
+    #endif
+    
+    #ifdef USE_LED
+        deactivateLEDs();
     #endif
 
-    game.setFrameCount(0);
+    frameCount = 0;
 
 }
 
@@ -112,5 +122,20 @@ void loop() {
     #ifndef DEBUG_SOUND
     audioUpdate();
     #endif
+
+    #ifdef USE_LED
+
+        if (LED_Counter > 0) {
+
+            LED_Counter--;
+
+            if (LED_Counter == 0) {
+                deactivateLEDs();             
+            }
+
+        }
+        
+    #endif
+
 
 }

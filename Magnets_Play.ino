@@ -1,12 +1,28 @@
 #include <ArduboyFX.h>  
  
-
+uint8_t bounce[7] = { 0, 0, 0, 0, 0, 0, 0 };
 
 void play_Init() { 
 
     gameState = GameState::Play;
     game.setup();
     game.loadPuzzle();
+
+    #ifdef PARTICLES
+
+        for (Particle &particle : particles) {
+
+            particle.setCounter(0);
+
+        }
+
+    #endif
+
+    for (uint8_t i = 0; i < 7; i++) {
+
+        bounce[i] = (6 - i) * 2;
+
+    }
 
 }
 
@@ -18,7 +34,7 @@ void play_Update() {
 
     uint8_t justPressed = getJustPressedButtons();
 
-    game.incFrameCount();
+    frameCount++;
 
     if (gameState == GameState::Play) {
 
@@ -26,7 +42,7 @@ void play_Update() {
 
             if (game.getX() < game.getWidth()) {
                 game.setX(game.getX() + 1);
-                game.setFrameCount(0);
+                frameCount = 0;
             }
             else {
 
@@ -40,7 +56,7 @@ void play_Update() {
 
             if (game.getX() > 1) {
                 game.setX(game.getX() - 1);
-                game.setFrameCount(0);
+                frameCount = 0;
             }
             
         }
@@ -49,7 +65,7 @@ void play_Update() {
 
             if (game.getY() < game.getHeight()) {
                 game.setY(game.getY() + 1);
-                game.setFrameCount(0);
+                frameCount = 0;
             }
             
         }
@@ -58,110 +74,31 @@ void play_Update() {
 
             if (game.getY() > 1) {
                 game.setY(game.getY() - 1);
-                game.setFrameCount(0);
+                frameCount = 0;
             }
             
         }
 
         if (justPressed & A_BUTTON) {
-    gameState = GameState::Play_Init;
-    return;
-            game.setFrameCount(0);
+
+            frameCount = 0;
+            ValidMove isValidMove = ValidMove::Neutral;
 
             switch (game.puzzle[game.getY()][game.getX()]) {
 
+
                 // Horizontal ..
-
-                // case Tiles::Horizontal_MinusPlus_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_PlusMinus_Start;
-                //     game.puzzle[game.getY()][game.getX() + 1] = Tiles::Horizontal_PlusMinus_End;
-                //     break;
-
-                // case Tiles::Horizontal_MinusPlus_End:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_PlusMinus_End;
-                //     game.puzzle[game.getY()][game.getX() - 1] = Tiles::Horizontal_PlusMinus_Start;
-                //     break;
-        
-                // case Tiles::Horizontal_PlusMinus_End:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_Neutral_End;
-                //     game.puzzle[game.getY()][game.getX() - 1] = Tiles::Horizontal_Neutral_Start;
-                //     break;
-
-                // case Tiles::Horizontal_PlusMinus_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_Neutral_Start;
-                //     game.puzzle[game.getY()][game.getX() + 1] = Tiles::Horizontal_Neutral_End;            
-                //     break;
-
-                // case Tiles::Horizontal_Neutral_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_Blank_Start;
-                //     game.puzzle[game.getY()][game.getX() + 1] = Tiles::Horizontal_Blank_End;                  
-                //     break;
-
-                // case Tiles::Horizontal_Neutral_End:
-                //     game.puzzle[game.getY()][game.getX() - 1] = Tiles::Horizontal_Blank_Start;
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_Blank_End;                  
-                //     break;
-
-                // case Tiles::Horizontal_Blank_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_MinusPlus_Start;
-                //     game.puzzle[game.getY()][game.getX() + 1] = Tiles::Horizontal_MinusPlus_End;                  
-                //     break;
-
-                // case Tiles::Horizontal_Blank_End:
-                //     game.puzzle[game.getY()][game.getX() - 1] = Tiles::Horizontal_MinusPlus_Start;
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_MinusPlus_End;                  
-                //     break;
-
-                // // Vertical ..
-
-                // case Tiles::Vertical_MinusPlus_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_PlusMinus_Start;
-                //     game.puzzle[game.getY() + 1][game.getX()] = Tiles::Vertical_PlusMinus_End;            
-                //     break;
-
-                // case Tiles::Vertical_MinusPlus_End:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_PlusMinus_End;
-                //     game.puzzle[game.getY() - 1][game.getX()] = Tiles::Vertical_PlusMinus_Start;                  
-                //     break;
-
-                // case Tiles::Vertical_PlusMinus_End:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_Neutral_End;
-                //     game.puzzle[game.getY() - 1][game.getX()] = Tiles::Vertical_Neutral_Start;                  
-                //     break;
-
-                // case Tiles::Vertical_PlusMinus_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_Neutral_Start;
-                //     game.puzzle[game.getY() + 1][game.getX()] = Tiles::Vertical_Neutral_End;                  
-                //     break;
-
-                // case Tiles::Vertical_Neutral_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_Blank_Start;
-                //     game.puzzle[game.getY() + 1][game.getX()] = Tiles::Vertical_Blank_End;                  
-                //     break;
-
-                // case Tiles::Vertical_Neutral_End:
-                //     game.puzzle[game.getY() - 1][game.getX()] = Tiles::Vertical_Blank_Start;
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_Blank_End;                  
-                //     break;
-
-                // case Tiles::Vertical_Blank_Start:
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_MinusPlus_Start;
-                //     game.puzzle[game.getY() + 1][game.getX()] = Tiles::Vertical_MinusPlus_End;                  
-                //     break;
-
-                // case Tiles::Vertical_Blank_End:
-                //     game.puzzle[game.getY() - 1][game.getX()] = Tiles::Vertical_MinusPlus_Start;
-                //     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_MinusPlus_End;                  
-                //     break;
 
                 case Tiles::Horizontal_MinusPlus_Start:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_PlusMinus_Start;
                     game.puzzle[game.getY()][game.getX() + 1] = Tiles::Horizontal_PlusMinus_End;
+                    isValidMove = game.isValidMove(game.getX(), game.getY());
                     break;
 
                 case Tiles::Horizontal_MinusPlus_End:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_PlusMinus_End;
                     game.puzzle[game.getY()][game.getX() - 1] = Tiles::Horizontal_PlusMinus_Start;
+                    isValidMove = game.isValidMove(game.getX() - 1, game.getY());
                     break;
         
                 case Tiles::Horizontal_PlusMinus_End:
@@ -177,33 +114,40 @@ void play_Update() {
                 case Tiles::Horizontal_Neutral_Start:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_PlusMinus_Start;
                     game.puzzle[game.getY()][game.getX() + 1] = Tiles::Horizontal_PlusMinus_End;                  
+                    isValidMove = game.isValidMove(game.getX(), game.getY());
                     break;
 
                 case Tiles::Horizontal_Neutral_End:
                     game.puzzle[game.getY()][game.getX() - 1] = Tiles::Horizontal_PlusMinus_Start;
                     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_PlusMinus_End;                  
+                    isValidMove = game.isValidMove(game.getX() - 1, game.getY());
                     break;
 
                 case Tiles::Horizontal_Blank_Start:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_MinusPlus_Start;
                     game.puzzle[game.getY()][game.getX() + 1] = Tiles::Horizontal_MinusPlus_End;                  
+                    isValidMove = game.isValidMove(game.getX(), game.getY());
                     break;
 
                 case Tiles::Horizontal_Blank_End:
                     game.puzzle[game.getY()][game.getX() - 1] = Tiles::Horizontal_MinusPlus_Start;
                     game.puzzle[game.getY()][game.getX()] = Tiles::Horizontal_MinusPlus_End;                  
+                    isValidMove = game.isValidMove(game.getX() - 1, game.getY());
                     break;
+
 
                 // Vertical ..
 
                 case Tiles::Vertical_MinusPlus_Start:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_PlusMinus_Start;
                     game.puzzle[game.getY() + 1][game.getX()] = Tiles::Vertical_PlusMinus_End;            
+                    isValidMove = game.isValidMove(game.getX(), game.getY());
                     break;
 
                 case Tiles::Vertical_MinusPlus_End:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_PlusMinus_End;
                     game.puzzle[game.getY() - 1][game.getX()] = Tiles::Vertical_PlusMinus_Start;                  
+                    isValidMove = game.isValidMove(game.getX(), game.getY() - 1);
                     break;
 
                 case Tiles::Vertical_PlusMinus_End:
@@ -219,32 +163,76 @@ void play_Update() {
                 case Tiles::Vertical_Neutral_Start:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_PlusMinus_Start;
                     game.puzzle[game.getY() + 1][game.getX()] = Tiles::Vertical_PlusMinus_End;                  
+                    isValidMove = game.isValidMove(game.getX(), game.getY());
                     break;
 
                 case Tiles::Vertical_Neutral_End:
                     game.puzzle[game.getY() - 1][game.getX()] = Tiles::Vertical_PlusMinus_Start;
                     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_PlusMinus_End;                  
+                    isValidMove = game.isValidMove(game.getX(), game.getY() - 1);
                     break;
 
                 case Tiles::Vertical_Blank_Start:
                     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_MinusPlus_Start;
                     game.puzzle[game.getY() + 1][game.getX()] = Tiles::Vertical_MinusPlus_End;                  
+                    isValidMove = game.isValidMove(game.getX(), game.getY());
                     break;
 
                 case Tiles::Vertical_Blank_End:
                     game.puzzle[game.getY() - 1][game.getX()] = Tiles::Vertical_MinusPlus_Start;
                     game.puzzle[game.getY()][game.getX()] = Tiles::Vertical_MinusPlus_End;                  
+                    isValidMove = game.isValidMove(game.getX(), game.getY() - 1);
                     break;
+
             }
 
             game.updateNumbers_Puzzle();
-            Serial.println(game.gameComplete());
+
+            if (game.gameComplete()) {
+
+                #ifdef PARTICLES
+                    launchParticles();
+                #endif
+
+                gameState = GameState::Play_Particles;
+                frameCount = 0;
+
+            }
+
+            if (soundSettings.getLED()) {
+                    
+                switch (isValidMove) {
+
+                    case ValidMove::Valid:
+                        
+                        #ifdef USE_LED
+                            a.digitalWriteRGB(GREEN_LED, RGB_ON);
+                            LED_Counter = 32;
+                        #endif
+
+                        break;
+
+                    case ValidMove::NotValid:
+
+                        #ifdef USE_LED
+                            a.digitalWriteRGB(RED_LED, RGB_ON);
+                            LED_Counter = 32;
+                        #endif
+
+                        break;
+
+                    case ValidMove::Neutral:
+                        break;
+                        
+                }
+
+            }
             
         }
 
         if (justPressed & B_BUTTON) {
 
-            game.setFrameCount(0);
+            frameCount = 0;
 
             switch (game.puzzle[game.getY()][game.getX()]) {
 
@@ -335,10 +323,50 @@ void play_Update() {
             }
 
             game.updateNumbers_Puzzle();
-            Serial.println(game.gameComplete());
+
+            #ifdef DEBUG_FORCE_EOG
+            if (!game.gameComplete()) {
+            #else
+            if (game.gameComplete()) {
+            #endif
+
+                #ifdef PARTICLES
+                    launchParticles();
+                #endif
+
+                gameState = GameState::Play_Particles;
+                frameCount = 0;
+
+            }
+
 
         }
 
+    }
+    else if (gameState == GameState::Play_Particles) {
+
+        if (frameCount % 2 == 0) {
+
+            for (uint8_t  i = 0; i < 7; i++) {
+
+                if (bounce[i] < 50) {
+                
+                    bounce[i]++;
+
+                }
+
+            }
+
+        }
+
+        if (bounce[0] == 50 && (justPressed & B_BUTTON || justPressed & A_BUTTON)) {
+
+            // cookie.hasSavedGame = false;
+            // saveCookie(true);
+            gameState = GameState::Title_Init;
+
+        }
+        
     }
     else {
 
@@ -374,23 +402,14 @@ void play_Update() {
                     break;
 
                 case GameState::Play_Menu2:
-                    // game.clearPuzzle();
-                    // game.setX(1);
-                    // game.setY(1);
-                    // gameState = GameState::Play;
                     break;
 
                 case GameState::Play_Menu3:
                     game.copy_SolutionToPuzzle();
-                    game.setX(1);
-                    game.setY(1);
-                    gameState = GameState::Play;
                     break;
 
                 case GameState::Play_Menu4:
-                    saveCookie(true);
-                    game.setFrameCount(400);
-                    gameState = GameState::Title_OptResume;
+                    gameState = GameState::Title_Init;
                     break;
 
             }
@@ -406,13 +425,13 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
     uint8_t currentPlane = a.currentPlane();
     if (a.needsUpdate()) play_Update();
 
-    if (game.getFrameCount() % 4 == 0) {
+    if (frameCount % 4 == 0) {
 
         xBot = xBot - 1;        if (xBot == -200) xBot = 0;
 
     }
 
-    if (game.getFrameCount() % 5 == 0) {
+    if (frameCount % 5 == 0) {
 
         xTop = xTop + 1;        if (xTop == 200) xTop = 0;
 
@@ -423,13 +442,63 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
     SpritesU::drawOverwriteFX(108, xBot, Images::Wave_Right, currentPlane);
     SpritesU::drawOverwriteFX(108, xBot + 200, Images::Wave_Right, currentPlane);
 
-    if (gameState == GameState::Play) {
-        SpritesU::drawPlusMaskFX(92, 3, Images::InGame, currentPlane);
-    }
-    else {
-        SpritesU::drawPlusMaskFX(92, 3, Images::InGame, ((static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Menu0)) * 3) + currentPlane);
+    switch (gameState) {
+
+        case GameState::Play:
+            SpritesU::drawPlusMaskFX(92, 3, Images::InGame, currentPlane);
+            renderGrid(currentPlane, true);
+            break;
+
+        case GameState::Play_Particles:
+            {
+                // SpritesU::drawPlusMaskFX(92, 3, Images::InGame, currentPlane);
+
+                #ifdef PARTICLES
+
+                    if (frameCount % 32) {
+                        launchParticles();
+                    }
+
+                #endif
+
+                renderGrid(currentPlane, false);
+
+                SpritesU::drawPlusMaskFX(3,   static_cast<int8_t>(pgm_read_byte(Constants::Bounce + bounce[0])) - 16, Images::Hooray_00, currentPlane);
+                SpritesU::drawPlusMaskFX(21,  static_cast<int8_t>(pgm_read_byte(Constants::Bounce + bounce[1])) - 16, Images::Hooray_01, currentPlane);
+                SpritesU::drawPlusMaskFX(44,  static_cast<int8_t>(pgm_read_byte(Constants::Bounce + bounce[2])) - 16, Images::Hooray_02, currentPlane);
+                SpritesU::drawPlusMaskFX(68,  static_cast<int8_t>(pgm_read_byte(Constants::Bounce + bounce[3])) - 16, Images::Hooray_03, currentPlane);
+                SpritesU::drawPlusMaskFX(84,  static_cast<int8_t>(pgm_read_byte(Constants::Bounce + bounce[4])) - 16, Images::Hooray_04, currentPlane);
+                SpritesU::drawPlusMaskFX(101, static_cast<int8_t>(pgm_read_byte(Constants::Bounce + bounce[5])) - 16, Images::Hooray_05, currentPlane);
+                SpritesU::drawPlusMaskFX(118, static_cast<int8_t>(pgm_read_byte(Constants::Bounce + bounce[6])) - 16, Images::Hooray_06, currentPlane);
+    
+            }
+            break;
+
+        case GameState::Play_Menu0 ... GameState::Play_Menu4:
+            SpritesU::drawPlusMaskFX(92, 3, Images::InGame, ((static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Menu0)) * 3) + currentPlane);
+            renderGrid(currentPlane, false);
+            break;
+
+        default:
+            renderGrid(currentPlane, true);
+            break;
     }
 
-    renderGrid(currentPlane);
+
+
+
+    // Render particles and scores ..
+
+    #ifdef PARTICLES
+        updateAndRenderParticles(frameCount);
+    #endif
 
 }
+
+#ifdef PARTICLES
+    void launchParticles() {
+
+        launchParticles(64, 32);
+
+    }
+#endif

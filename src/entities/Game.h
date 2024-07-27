@@ -19,48 +19,53 @@ struct Game {
         uint8_t heights[3] = { 5, 7, 9 };
         uint8_t spacings[3] = { 9, 6, 6 };
 
-        uint16_t frameCount = 0;
+        // uint16_t frameCount = 0;
         uint8_t x = 1;
         uint8_t y = 1;
+        bool complete = false;
+
         GameSize gameSize = GameSize::Small;
         GameHard gameHard = GameHard::Easy;
         GameState prevGameState = GameState::SplashScreen_Start;
 
     public:
 
-        uint16_t getFrameCount()                        { return this->frameCount; }
+        // uint16_t getFrameCount()                        { return this->frameCount; }
         uint8_t getWidth()                              { return this->widths[this->gameSize]; }
         uint8_t getHeight()                             { return this->heights[this->gameSize]; }
         uint8_t getX()                                  { return this->x; }
         uint8_t getY()                                  { return this->y; }
         uint8_t getSpacing()                            { return this->spacings[this->gameSize]; }
+        bool getComplete()                              { return this->complete; }
         GameSize getGameSize()                          { return this->gameSize; }
         GameHard getGameHard()                          { return this->gameHard; }
         GameState getPrevGameState()                    { return this->prevGameState; }
 
-        void setFrameCount(uint16_t val)                { this->frameCount = val; }
+        // void setFrameCount(uint16_t val)                { this->frameCount = val; }
         void setX(uint8_t val)                          { this->x = val; }
         void setY(uint8_t val)                          { this->y = val; }
+        void setComplete(bool val)                      { this->complete = val; }
         void setGameSize(GameSize val)                  { this->gameSize = val; }
         void setGameHard(GameHard val)                  { this->gameHard = val; }
         void setPrevGameState(GameState val)            { this->prevGameState = val; }
 
-        void incFrameCount() {
+        // void incFrameCount() {
 
-            this->frameCount++;
+        //     this->frameCount++;
 
-        }
+        // }
 
-        void resetFrameCount() {
+        // void resetFrameCount() {
 
-            this->frameCount = 0;
+        //     this->frameCount = 0;
             
-        }
+        // }
 
         void setup() {
 
             this->x = 1;
             this->y = 1;
+            this->complete = false;
 
             for (uint8_t y = 0; y < 9; y++) {
 
@@ -497,22 +502,25 @@ struct Game {
 
                                 }
 
-    Serial.print("H ");
-    Serial.print(x);
-    Serial.print(",");
-    Serial.print(y);
-    Serial.print("=");
-    Serial.print(r);
-    Serial.print(" (+");
-    Serial.print(surroundingPlus_L);
-    Serial.print(" -");
-    Serial.print(surroundingMinus_L);
-    Serial.print(") ");
-    Serial.print(" (+");
-    Serial.print(surroundingPlus_R);
-    Serial.print(" -");
-    Serial.print(surroundingMinus_R);
-    Serial.println(") ");
+                                #ifdef DEBUG_POPULATE_PUZZLE
+                                    DEBUG_PRINT("H ");
+                                    DEBUG_PRINT(x);
+                                    DEBUG_PRINT(",");
+                                    DEBUG_PRINT(y);
+                                    DEBUG_PRINT("=");
+                                    DEBUG_PRINT(r);
+                                    DEBUG_PRINT(" (+");
+                                    DEBUG_PRINT(surroundingPlus_L);
+                                    DEBUG_PRINT(" -");
+                                    DEBUG_PRINT(surroundingMinus_L);
+                                    DEBUG_PRINT(") ");
+                                    DEBUG_PRINT(" (+");
+                                    DEBUG_PRINT(surroundingPlus_R);
+                                    DEBUG_PRINT(" -");
+                                    DEBUG_PRINT(surroundingMinus_R);
+                                    DEBUG_PRINTLN(") ");
+                                #endif
+
                                 switch (r) {
 
                                     case 0 ... Constants::Fill_Orient_2:
@@ -635,121 +643,103 @@ struct Game {
 
                                 }
 
-    Serial.print("V ");
-    Serial.print(x);
-    Serial.print(",");
-    Serial.print(y);
-    Serial.print("=");
-    Serial.print(r);
-    Serial.print(" (+");
-    Serial.print(surroundingPlus_U);
-    Serial.print(" -");
-    Serial.print(surroundingMinus_U);
-    Serial.print(")");
-    Serial.print(" (+");
-    Serial.print(surroundingPlus_D);
-    Serial.print(" -");
-    Serial.print(surroundingMinus_D);
-    Serial.println(")");
-                            switch (r) {
+                                #ifdef DEBUG_POPULATE_PUZZLE
+                                    DEBUG_PRINT("V ");
+                                    DEBUG_PRINT(x);
+                                    DEBUG_PRINT(",");
+                                    DEBUG_PRINT(y);
+                                    DEBUG_PRINT("=");
+                                    DEBUG_PRINT(r);
+                                    DEBUG_PRINT(" (+");
+                                    DEBUG_PRINT(surroundingPlus_U);
+                                    DEBUG_PRINT(" -");
+                                    DEBUG_PRINT(surroundingMinus_U);
+                                    DEBUG_PRINT(")");
+                                    DEBUG_PRINT(" (+");
+                                    DEBUG_PRINT(surroundingPlus_D);
+                                    DEBUG_PRINT(" -");
+                                    DEBUG_PRINT(surroundingMinus_D);
+                                    DEBUG_PRINTLN(")");
+                                #endif
+
+                                switch (r) {
 
                                     case 0 ... Constants::Fill_Orient_2:
-                                        {
 
-                                            // if (surroundingPlus > 0 && surroundingMinus > 0) {
+                                        //Must be neutral ..
+                                        
+                                        if (surroundingPlus_U > 0 && surroundingMinus_D > 0) {
 
-                                            //     this->solution[y][x] = Tiles::Vertical_Neutral_Start;
-                                            //     this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                            this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                            this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
 
-                                            // }
-                                            // else if (surroundingPlus > 0 && surroundingMinus == 0) {
+                                        }
+                                        else if (surroundingPlus_U > 0 && surroundingPlus_D > 0) {
 
-                                            //     this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
-                                            //     this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+                                            this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                            this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
 
-                                            // }
-                                            // else if (surroundingPlus == 0 && surroundingMinus > 0) {
+                                        }
+                                        else if (surroundingMinus_U > 0 && surroundingMinus_D > 0) {
 
-                                            //     this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
-                                            //     this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+                                            this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                            this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
 
-                                            // }
-                                            // else {
+                                        }
 
-                                            //Must be neutral ..
-                                            
-                                            if (surroundingPlus_U > 0 && surroundingMinus_D > 0) {
+                                        // OK to place a tile ..             
 
-                                                this->solution[y][x] = Tiles::Vertical_Neutral_Start;
-                                                this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                        else if (surroundingPlus_U > 0 && surroundingPlus_D == 0) {
 
-                                            }
-                                            else if (surroundingPlus_U > 0 && surroundingPlus_D > 0) {
+                                            this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                            this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
 
-                                                this->solution[y][x] = Tiles::Vertical_Neutral_Start;
-                                                this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                        }
+                                        else if (surroundingPlus_U == 0 && surroundingPlus_D > 0) {
 
-                                            }
-                                            else if (surroundingMinus_U > 0 && surroundingMinus_D > 0) {
+                                            this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                            this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
 
-                                                this->solution[y][x] = Tiles::Vertical_Neutral_Start;
-                                                this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                        }
+                                        else if (surroundingMinus_U > 0 && surroundingMinus_D == 0) {
 
-                                            }
+                                            this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                            this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
 
-                                            // OK to place a tile ..             
+                                        }
+                                        else if (surroundingMinus_U == 0 && surroundingMinus_D > 0) {
 
-                                            else if (surroundingPlus_U > 0 && surroundingPlus_D == 0) {
+                                            this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                            this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
 
-                                                this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
-                                                this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+                                        }
+                                        else {
 
-                                            }
-                                            else if (surroundingPlus_U == 0 && surroundingPlus_D > 0) {
+                                            switch (r) {
 
-                                                this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
-                                                this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+                                                case 0 ... Constants::Fill_Orient_1:
+                                                    this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
+                                                    this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
+                                                    break;
 
-                                            }
-                                            else if (surroundingMinus_U > 0 && surroundingMinus_D == 0) {
+                                                case Constants::Fill_Orient_1 + 1 ... Constants::Fill_Orient_2:
+                                                    this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
+                                                    this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
+                                                    break;
 
-                                                this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
-                                                this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
-
-                                            }
-                                            else if (surroundingMinus_U == 0 && surroundingMinus_D > 0) {
-
-                                                this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
-                                                this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
-
-                                            }
-                                            else {
-
-                                                switch (r) {
-
-                                                    case 0 ... Constants::Fill_Orient_1:
-                                                        this->solution[y][x] = Tiles::Vertical_MinusPlus_Start;
-                                                        this->solution[y + 1][x] = Tiles::Vertical_MinusPlus_End;
-                                                        break;
-
-                                                    case Constants::Fill_Orient_1 + 1 ... Constants::Fill_Orient_2:
-                                                        this->solution[y][x] = Tiles::Vertical_PlusMinus_Start;
-                                                        this->solution[y + 1][x] = Tiles::Vertical_PlusMinus_End;
-                                                        break;
-
-                                                    default:
-                                                        this->solution[y][x] = Tiles::Vertical_Neutral_Start;
-                                                        this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
-                                                        break;
-
-                                                }
+                                                default:
+                                                    this->solution[y][x] = Tiles::Vertical_Neutral_Start;
+                                                    this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
+                                                    break;
 
                                             }
 
                                         }
+
                                         break;
 
                                     default:
+
                                         this->solution[y][x] = Tiles::Vertical_Neutral_Start;
                                         this->solution[y + 1][x] = Tiles::Vertical_Neutral_End;
                                         break;
@@ -911,6 +901,8 @@ struct Game {
 
         bool gameComplete() {
 
+            this->complete = false;
+
             for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
 
                 if (this->solution[y][0] != this->puzzle[y][0]) {
@@ -943,7 +935,121 @@ struct Game {
 
             }
 
+            this->complete = true;
             return true;
+
+        }
+
+
+        ValidMove isValidMove(uint8_t x, uint8_t y) {
+
+            switch (this->puzzle[y][x]) {
+
+                case Tiles::Vertical_MinusPlus_Start:
+                case Tiles::Horizontal_MinusPlus_Start:
+                    if (this->hasSurroundingMinus(x, y))   return ValidMove::NotValid;
+                    break;
+
+                case Tiles::Vertical_PlusMinus_Start:
+                case Tiles::Horizontal_PlusMinus_Start:
+                    if (this->hasSurroundingPlus(x, y))   return ValidMove::NotValid;
+                    break;
+
+            }
+
+            switch (this->puzzle[y][x]) {
+
+                case Tiles::Vertical_MinusPlus_Start:
+                    if (this->hasSurroundingPlus(x, y + 1))   return ValidMove::NotValid;
+                    break;
+
+                case Tiles::Vertical_PlusMinus_Start:
+                    if (this->hasSurroundingMinus(x, y + 1))   return ValidMove::NotValid;
+                    break;
+
+                case Tiles::Horizontal_PlusMinus_Start:
+                    if (this->hasSurroundingMinus(x + 1, y))   return ValidMove::NotValid;
+                    break;
+
+                case Tiles::Horizontal_MinusPlus_Start:
+                    if (this->hasSurroundingPlus(x + 1, y))   return ValidMove::NotValid;
+                    break;
+
+            }
+
+            return ValidMove::Valid;
+
+        }
+
+        bool hasSurroundingPlus(uint8_t x, uint8_t y) {
+
+            uint8_t tile = 0;
+
+            if (x > 1) {
+
+                tile = this->puzzle[y][x - 1];
+                if (this->isPlus(tile)) return true;
+
+            }
+
+            if (x < this->getWidth()) {
+
+                tile = this->puzzle[y][x + 1];
+                if (this->isPlus(tile)) return true;
+
+            }
+
+            if (y > 1) {
+
+                tile = this->puzzle[y - 1][x];
+                if (this->isPlus(tile)) return true;
+
+            }
+
+            if (y < this->getHeight()) {
+
+                tile = this->puzzle[y + 1][x];
+                if (this->isPlus(tile)) return true;
+
+            }
+
+            return false;
+
+        }
+
+        bool hasSurroundingMinus(uint8_t x, uint8_t y) {
+
+            uint8_t tile = 0;
+            
+            if (x > 1) {
+
+                tile = this->puzzle[y][x - 1];
+                if (this->isMinus(tile)) return true;
+
+            }
+
+            if (x < this->getWidth()) {
+
+                tile = this->puzzle[y][x + 1];
+                if (this->isMinus(tile)) return true;
+
+            }
+
+            if (y > 1) {
+
+                tile = this->puzzle[y - 1][x];
+                if (this->isMinus(tile)) return true;
+
+            }
+
+            if (y < this->getHeight()) {
+
+                tile = this->puzzle[y + 1][x];
+                if (this->isMinus(tile)) return true;
+
+            }
+
+            return false;
 
         }
 
