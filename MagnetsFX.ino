@@ -36,7 +36,7 @@ SoundSettings &soundSettings = cookie.soundSettings;
 GameState gameState = GameState::SplashScreen_Start;
 
 uint16_t frameCount = 0;
-
+Hint hint;
 Font3x5 font3x5 = Font3x5();
 bool particlesNeedRendering = false;
 
@@ -52,6 +52,7 @@ uint16_t seed = 72;
 uint8_t LED_Counter = 0;
 #endif
 
+
 void setup() {
 
     a.boot();
@@ -64,9 +65,8 @@ void setup() {
     #ifdef USE_LED
         deactivateLEDs();
     #endif
-
+    
     frameCount = 0;
-
 }
 
 void loop() {
@@ -74,14 +74,6 @@ void loop() {
     FX::enableOLED();
     a.waitForNextPlane(BLACK);
     FX::disableOLED();
-
-    #ifdef DEBUG
-
-        font3x5.setCursor(0, 0);
-        font3x5.print((uint8_t)gameState);
-
-    #endif
-
 
     switch (gameState) {
 
@@ -121,6 +113,18 @@ void loop() {
         }
         
     #endif
+
+    if (hint.count > 0) {
+
+        hint.count--;
+    
+        if (hint.count == 0) {
+
+            gameState = GameState::Play;
+
+        }
+
+    }
 
 
 }

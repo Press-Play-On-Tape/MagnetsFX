@@ -188,7 +188,7 @@ void play_Update() {
 
             game.updateNumbers_Puzzle();
 
-            if (game.gameComplete()) {
+            if (game.isGameComplete()) {
 
                 #ifdef PARTICLES
                     launchParticles();
@@ -207,7 +207,7 @@ void play_Update() {
                         
                         #ifdef USE_LED
                             a.digitalWriteRGB(GREEN_LED, RGB_ON);
-                            LED_Counter = 32;
+                            LED_Counter = Constants::LED_Period;
                         #endif
 
                         break;
@@ -216,7 +216,7 @@ void play_Update() {
 
                         #ifdef USE_LED
                             a.digitalWriteRGB(RED_LED, RGB_ON);
-                            LED_Counter = 32;
+                            LED_Counter = Constants::LED_Period;
                         #endif
 
                         break;
@@ -325,9 +325,9 @@ void play_Update() {
             game.updateNumbers_Puzzle();
 
             #ifdef DEBUG_FORCE_EOG
-            if (!game.gameComplete()) {
+            if (!game.isGameComplete()) {
             #else
-            if (game.gameComplete()) {
+            if (game.isGameComplete()) {
             #endif
 
                 #ifdef PARTICLES
@@ -361,8 +361,6 @@ void play_Update() {
 
         if (bounce[0] == 50 && (justPressed & B_BUTTON || justPressed & A_BUTTON)) {
 
-            // cookie.hasSavedGame = false;
-            // saveCookie(true);
             gameState = GameState::Title_Init;
 
         }
@@ -375,18 +373,21 @@ void play_Update() {
         if (justPressed & LEFT_BUTTON || justPressed & B_BUTTON) {
 
             gameState = GameState::Play;
+            hint.count = 0;
             
         }
 
         if (justPressed & UP_BUTTON && gameState > GameState::Play_Menu1) {
 
             gameState--;
+            hint.count = 0;
             
         }
 
         if (justPressed & DOWN_BUTTON && gameState < GameState::Play_Menu4) {
 
             gameState++;
+            hint.count = 0;
             
         }
 
@@ -402,10 +403,38 @@ void play_Update() {
                     break;
 
                 case GameState::Play_Menu2:
+                    {
+                        hint = game.getHint();
+
+                        switch (hint.hintType) {
+
+                            case HintType::InvalidTile:
+
+                                game.setX(hint.x);
+                                game.setY(hint.y);
+                                gameState = GameState::Play_Hint0;
+
+                                break;
+
+                            case HintType::RandomTile:
+
+                                game.puzzle[hint.y][hint.x] = hint.tile;
+                                game.puzzle[hint.y2][hint.x2] = hint.tile2;
+                                game.setX(hint.x);
+                                game.setY(hint.y);
+                                game.updateNumbers_Puzzle();
+                                gameState = GameState::Play_Hint1;
+
+                                break;
+
+                        }
+
+                    }
                     break;
 
                 case GameState::Play_Menu3:
                     game.copy_SolutionToPuzzle();
+                    game.updateNumbers_Puzzle();
                     break;
 
                 case GameState::Play_Menu4:
@@ -451,13 +480,22 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
         case GameState::Play:
 
             if (game.renderMenu()) {
-                SpritesU::drawPlusMaskFX(92, 3, Images::InGame, currentPlane);
+
+                if (hint.count == 0) {
+                    SpritesU::drawPlusMaskFX(92, 3, Images::InGame, currentPlane);
+                }
+
             }
             else {
                 SpritesU::drawOverwriteFX(123, 1, Images::Arrow, currentPlane);
             }
 
             renderGrid(currentPlane, true);
+
+            // if (hint.count != 0) {
+            //     SpritesU::drawPlusMaskFX(86, 3, Images::Hints, (static_cast<uint8_t>(hint.hintType) * 3) + currentPlane);
+            // }
+
             break;
 
         case GameState::Play_Particles:
@@ -494,7 +532,22 @@ void play(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
             renderGrid(currentPlane, false);
 
             if (game.getRenderSize() == RenderSize::Large && game.getGameSize() == GameSize::Large) {
-                SpritesU::drawOverwriteFX(128 - 43, 0, Images::InGame_Solid, ((static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Menu0)) * 3) + currentPlane);
+                SpritesU::drawOverwriteFX(128 - 46, 0, Images::InGame_Solid, ((static_cast<uint8_t>(gameState) - static_cast<uint8_t>(GameState::Play_Menu0)) * 3) + currentPlane);
+            }
+
+            break;
+
+        case GameState::Play_Hint0 ... GameState::Play_Hint1:
+
+            if (!(game.getRenderSize() == RenderSize::Large && game.getGameSize() == GameSize::Large)) {
+                SpritesU::drawPlusMaskFX(86, 3, Images::Hints, (static_cast<uint8_t>(hint.hintType) * 3) + currentPlane);
+            }
+
+            renderGrid(currentPlane, true);
+
+            if (game.getRenderSize() == RenderSize::Large && game.getGameSize() == GameSize::Large) {
+                SpritesU::drawOverwriteFX(128 - 46, 0, Images::InGame_Solid, (5 * 3) + currentPlane);
+                SpritesU::drawOverwriteFX(85, 3, Images::Hints_Solid, (static_cast<uint8_t>(hint.hintType) * 3) + currentPlane);
             }
 
             break;

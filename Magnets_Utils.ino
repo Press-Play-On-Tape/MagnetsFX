@@ -26,10 +26,10 @@ void saveCookie(bool enableLEDs) {
 
     #ifdef USE_LED
     if (enableLEDs) {
-        a.digitalWriteRGB(RED_LED, RGB_ON);
+        a.digitalWriteRGB(BLUE_LED, RGB_ON);
     }
     #endif
-
+    
     FX::saveGameState(cookie);
 
     #ifdef USE_LED

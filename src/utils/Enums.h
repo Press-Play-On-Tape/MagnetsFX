@@ -1,30 +1,5 @@
 #pragma once
 
-enum class MusicSong : uint8_t {
-    MainTheme
-};
-
-enum class MusicSFX : uint8_t {
-    SFX_Death,
-    SFX_Victory,
-    SFX_XPGain,
-    SFX_Three_Inc,
-    SFX_Three_Dec,
-    SFX_PlayerBlip,
-    SFX_EnemyBlip,
-    SFX_Explosion,
-    SFX_DoubleBeep,
-    SFX_DoubleBeepDown,
-    SFX_Bet1,
-    SFX_Bet2,
-    SFX_Bet3,
-    SFX_Bet4,
-    SFX_Bet5,
-    SFX_Bet6,
-    SFX_Click,
-    SFX_SmallBlind,
-    SFX_BigBlind,
-};
 
 enum class GameState : uint8_t {
 
@@ -56,6 +31,8 @@ enum class GameState : uint8_t {
         Play_Menu2,
         Play_Menu3,
         Play_Menu4,
+        Play_Hint0,
+        Play_Hint1,
     Play_End,
     
 };
@@ -125,4 +102,25 @@ enum ValidMove : uint8_t {
     Valid,
     NotValid,
     Neutral
+};
+
+
+enum class HintType : uint8_t { 
+    InvalidTile,
+    RandomTile,
+    Non
+};
+
+struct Hint {
+
+  uint8_t x;
+  uint8_t y; 
+  uint8_t tile; 
+  uint8_t x2;
+  uint8_t y2; 
+  uint8_t tile2; 
+  uint8_t count; 
+
+  HintType hintType;
+
 };

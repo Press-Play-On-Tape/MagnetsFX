@@ -8,39 +8,10 @@
 #define DEBUG_PRINTLN  Serial.println
 
 #define _DEBUG
-#define DEBUG_FIXED_PUZZLE
+#define _DEBUG_FIXED_PUZZLE
 #define _DEBUG_FIXED_RAND
 #define _DEBUG_SOUND
 #define _DEBUG_FORCE_EOG
-
-namespace Music {
-
-    constexpr uint24_t Songs[] = { Music::Song_MainTheme };
-
-    constexpr uint24_t SFXs[] =  { Music::SFX_Death, 
-                                   Music::SFX_Victory,
-                                   Music::SFX_XPGain,
-                                   Music::SFX_Three_Inc,
-                                   Music::SFX_Three_Dec,
-                                   Music::SFX_PlayerBlip,
-                                   Music::SFX_EnemyBlip,
-                                   Music::SFX_Explosion,
-                                   Music::SFX_DoubleBeep,
-                                   Music::SFX_DoubleBeepDown,
-                                   Music::SFX_Bet1,
-                                   Music::SFX_Bet2,
-                                   Music::SFX_Bet3,
-                                   Music::SFX_Bet4,
-                                   Music::SFX_Bet5,
-                                   Music::SFX_Bet6,
-                                   Music::SFX_Click,
-                                   Music::SFX_SmallBlind,
-                                   Music::SFX_BigBlind,
-                                };
-
-}
-
-
 
 
 namespace Constants {
@@ -58,5 +29,6 @@ namespace Constants {
     constexpr uint8_t Fill_Orient_2 = 20;
     constexpr uint8_t ParticlesMax = 35;
     constexpr uint8_t NoNumber = 255;
+    constexpr uint8_t LED_Period = 4 * 8;
     
 };

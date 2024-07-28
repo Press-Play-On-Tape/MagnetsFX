@@ -140,7 +140,7 @@ convert_header(IMAGES + 'Titles/Wave_Left.png',                                 
 convert_header(IMAGES + 'Titles/Wave_Right.png',                                               BASE + 'Images.hpp', 'Wave_Right', 4)
 convert_header(IMAGES + 'Titles/Magnets.png',                                                  BASE + 'Images.hpp', 'Magnets', 4)
 convert_header(IMAGES + 'Titles/InGame.png',                                                   BASE + 'Images.hpp', 'InGame', 4, 34, 40)
-convert_header(IMAGES + 'Titles/InGame_Solid.png',                                             BASE + 'Images.hpp', 'InGame_Solid', 4, 43, 64)
+convert_header(IMAGES + 'Titles/InGame_Solid.png',                                             BASE + 'Images.hpp', 'InGame_Solid', 4, 46, 64)
 
 convert_header(IMAGES + 'Tiles/Tile_0102.png',                                                 BASE + 'Images.hpp', 'Tile_0102', 4, 17, 8)
 convert_header(IMAGES + 'Tiles/Tile_0403.png',                                                 BASE + 'Images.hpp', 'Tile_0403', 4, 17, 8)
@@ -156,3 +156,5 @@ convert_header(IMAGES + 'Cursor_Y.png',                                         
 convert_header(IMAGES + 'Plus.png',                                                            BASE + 'Images.hpp', 'Plus', 4)
 convert_header(IMAGES + 'Minus.png',                                                           BASE + 'Images.hpp', 'Minus', 4)
 convert_header(IMAGES + 'Titles/Arrow.png',                                                    BASE + 'Images.hpp', 'Arrow', 4)
+convert_header(IMAGES + 'Titles/Hints.png',                                                    BASE + 'Images.hpp', 'Hints', 4, 43, 40)
+convert_header(IMAGES + 'Titles/Hints_Solid.png',                                              BASE + 'Images.hpp', 'Hints_Solid', 4, 43, 40)

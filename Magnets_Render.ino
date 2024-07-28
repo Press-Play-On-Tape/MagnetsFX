@@ -8,13 +8,11 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
     uint8_t xOffset_Cols[] = { 11, 10 };
     uint8_t yOffset_Rows[] = { 10, 9 };
-    // uint8_t xOffset_Cols[] = { 10, 11 };
-    // uint8_t yOffset_Rows[] = { 9, 10 };
     uint8_t xOffset_Numbers = 0;
     uint8_t yOffset_Numbers = 0;
     uint8_t yOffset_Overall = 0;
 
-    if (frameCount % 64 < 32 && gameState == GameState::Play) {
+    if (frameCount % 64 < 32 && (gameState == GameState::Play || gameState == GameState::Play_Hint0 || gameState == GameState::Play_Hint1)) {
 
         flash = true;
 
@@ -113,47 +111,9 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
             break;
 
     }
-// Serial.print(game.getY());
-// Serial.print(" ");
-// Serial.println(yOffset_Overall);
 
-
-
-    // Determine numbers offset ..
-
-    // switch (game.getRenderSize()) {
-
-    //     case RenderSize::Small:
-    //     case RenderSize::Large:
-    // Serial.println(static_cast<uint8_t>(game.getRenderSize()));
-            xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(game.getRenderSize())];
-            yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(game.getRenderSize())];
-    //         break;
-
-    //     default:
-
-    //         switch (game.getGameSize()) {
-
-    //             case GameSize::Small:
-    //                 xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(RenderSize::Large)];
-    //                 yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(RenderSize::Large)];
-    //                 break;
-
-    //             case GameSize::Medium:
-    //                 xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(RenderSize::Large)];
-    //                 yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(RenderSize::Large)];
-    //                 break;
-
-    //             case GameSize::Large:
-    //                 xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(RenderSize::Small)];
-    //                 yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(RenderSize::Small)];
-    //                 break;
-
-    //         }
-
-    //         break;
-
-    // }
+    xOffset_Numbers = xOffset_Cols[static_cast<uint8_t>(game.getRenderSize())];
+    yOffset_Numbers = yOffset_Rows[static_cast<uint8_t>(game.getRenderSize())];
 
 
     // + Cols
@@ -259,14 +219,17 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
     SpritesU::drawOverwriteFX(9 + (game.getWidth() * game.getSpacing()), -yOffset_Overall + 9 + (game.getHeight() * game.getSpacing()), Images::Minus, currentPlane);
 
 
-
+    
     for (uint8_t y = 1; y < game.getHeight() + 1; y++) {
 
         for (uint8_t x = 1; x < game.getWidth() + 1; x++) {
 
             uint8_t i = game.puzzle[y][x];
-            uint8_t tileSet = 0;//soundSettings.getRenderSize() == RenderSize::Large ? 0 : 6;
+ 
 
+            // Tileset to use?
+
+            uint8_t tileSet = 0;
 
             switch (game.getRenderSize()) {
 
@@ -280,6 +243,10 @@ void renderGrid(uint8_t currentPlane, bool renderGuides) {
 
             }
 
+
+            // High contrast ..
+
+            tileSet = tileSet + 12;
 
             switch (i) {
 

@@ -219,17 +219,17 @@ struct Game {
                     #endif
                     flipVertical();
                 }
-
-                #ifdef DEBUG
-                    printPuzzle();
-                #endif
             
             #endif
 
             this->fillPuzzle();
+            this->updateNumbers_Puzzle();
             this->updateNumbers_Solution(this->getGameLevel());
-            this->printPuzzle();
-            this->printSolution();
+
+            #ifdef DEBUG
+                this->printPuzzle();
+                this->printSolution();
+            #endif
 
         }
 
@@ -595,7 +595,6 @@ struct Game {
                 
                     uint8_t space = this->puzzle[y][x];
 
-
                     switch (space) {
                         
                         case Tiles::Horizontal_Blank_Start: 
@@ -734,6 +733,8 @@ struct Game {
                                         
 
                                 }
+
+                                x = x+ 1;
 
                             }
 
@@ -985,9 +986,9 @@ struct Game {
 
         void copy() {
             
-            for (uint8_t y = 0; y < 9; y++) {
+            for (uint8_t y = 0; y < this->getHeight() + 1; y++) {
 
-                for (uint8_t x = 0; x < 10; x++) {
+                for (uint8_t x = 0; x < this->getWidth() + 1; x++) {
                 
                     this->solution[y][x] = this->puzzle[y][x];
                     this->reset[y][x] = this->puzzle[y][x];
@@ -1027,7 +1028,7 @@ struct Game {
 
         }
 
-        bool gameComplete() {
+        bool isGameComplete() {
 
             this->complete = false;
 
@@ -1062,6 +1063,68 @@ struct Game {
                 }
 
             }
+
+
+
+            // If all the numbers match then look for +ve touching +ve, -ve touching -ve ..
+
+
+            for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+
+                for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+                
+                    switch (this->puzzle[y][x]) {
+
+                        case Tiles::Vertical_Blank_Start:
+                        case Tiles::Horizontal_Blank_Start:
+                            return false;
+
+                        case Tiles::Vertical_MinusPlus_Start:
+                        case Tiles::Horizontal_MinusPlus_Start:
+
+                            if (this->hasSurroundingMinus(x, y))   {
+
+                                #ifdef DEBUG_IS_COMPLETE
+                                    DEBUG_PRINT("Adj minus, tile ");
+                                    DEBUG_PRINT(this->puzzle[y][x]);
+                                    DEBUG_PRINT(" @ ");
+                                    DEBUG_PRINT(x);
+                                    DEBUG_PRINT(",");
+                                    DEBUG_PRINTLN(y);
+                                    printPuzzle();
+                                #endif
+
+                                return false;
+
+                            }
+                            break;
+
+                        case Tiles::Vertical_PlusMinus_Start:
+                        case Tiles::Horizontal_PlusMinus_Start:
+
+                            if (this->hasSurroundingPlus(x, y))   {
+
+                                #ifdef DEBUG_IS_COMPLETE
+                                    DEBUG_PRINT("Adj plus, tile ");
+                                    DEBUG_PRINT(this->puzzle[y][x]);
+                                    DEBUG_PRINT(" @ ");
+                                    DEBUG_PRINT(x);
+                                    DEBUG_PRINT(",");
+                                    DEBUG_PRINTLN(y);
+                                    printPuzzle();
+                                #endif
+                                
+                                return false;
+
+                            }
+                            break;
+
+                    }
+
+                }
+
+            }
+
 
             this->complete = true;
             return true;
@@ -1152,32 +1215,132 @@ struct Game {
             if (x > 1) {
 
                 tile = this->puzzle[y][x - 1];
-                if (this->isMinus(tile)) return true;
+
+                if (this->isMinus(tile)) {
+                    return true;
+                }
 
             }
 
             if (x < this->getWidth()) {
 
                 tile = this->puzzle[y][x + 1];
-                if (this->isMinus(tile)) return true;
+
+                if (this->isMinus(tile)) {
+                    return true;
+                }
 
             }
 
             if (y > 1) {
 
                 tile = this->puzzle[y - 1][x];
-                if (this->isMinus(tile)) return true;
+
+                if (this->isMinus(tile)) {
+                    return true;
+                }
 
             }
 
             if (y < this->getHeight()) {
 
                 tile = this->puzzle[y + 1][x];
-                if (this->isMinus(tile)) return true;
+
+                if (this->isMinus(tile)) {
+                    return true;
+                }
 
             }
 
             return false;
+
+        }
+
+
+        Hint getHint() {
+
+            Hint hint;
+
+            // Look for incorrect value ..
+
+            for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+
+                for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+                
+                    uint8_t tile = this->puzzle[y][x];
+
+                    switch (tile) {
+
+                        case Tiles::Horizontal_Blank_Start:
+                        case Tiles::Horizontal_Blank_End:
+                        case Tiles::Vertical_Blank_Start:
+                        case Tiles::Vertical_Blank_End:
+                            break;
+
+                        default:
+      
+                            if (this->solution[y][x] != this->puzzle[y][x]) {
+
+                                hint.x = x;
+                                hint.y = y;
+                                hint.hintType = HintType::InvalidTile;
+                                hint.count = 240;
+                                return hint;
+
+                            }
+
+                            break;
+                        
+                    }
+
+                }
+
+            }
+
+            for (uint8_t y = 1; y < this->getHeight() + 1; y++) {
+
+                for (uint8_t x = 1; x < this->getWidth() + 1; x++) {
+                
+                    uint8_t tile = this->puzzle[y][x];
+
+                    switch (tile) {
+
+                        case Tiles::Horizontal_Blank_Start:
+                        case Tiles::Horizontal_Blank_End:
+
+                            hint.x = x;
+                            hint.y = y;
+                            hint.tile = this->solution[y][x];
+                            hint.x2 = x + 1;
+                            hint.y2 = y;
+                            hint.tile2 = this->solution[y][x + 1];
+                            hint.hintType = HintType::RandomTile;
+                            hint.count = 255;
+                            return hint;
+
+                        case Tiles::Vertical_Blank_Start:
+                        case Tiles::Vertical_Blank_End:
+
+                            hint.x = x;
+                            hint.y = y;
+                            hint.tile = this->solution[y][x];
+                            hint.x2 = x;
+                            hint.y2 = y + 1;
+                            hint.tile2 = this->solution[y + 1][x];
+                            hint.hintType = HintType::RandomTile;
+                            hint.count = 255;
+                            return hint;
+
+                        default:
+                            break;
+                        
+                    }
+
+                }
+
+            }
+
+            return hint;
 
         }
 
