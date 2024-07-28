@@ -51,7 +51,7 @@ void title_Update() {
             }
 
             if (justPressed & A_BUTTON) {
-                gameState = GameState::Title_Options_LEDS;
+                gameState = GameState::Title_Options_Small;
             }
 
             break;
@@ -100,29 +100,6 @@ void title_Update() {
 
             break;
 
-        case GameState::Title_Options_LEDS:
-            
-            if (justPressed & A_BUTTON) {
-
-                soundSettings.setLED(!soundSettings.getLED());
-
-            }
-            
-            if (justPressed & B_BUTTON) {
-
-                gameState = GameState::Title_Options;
-                saveCookie(true);
-                
-            }
-            
-            if (justPressed & DOWN_BUTTON) {
-
-                gameState++;
-
-            }
-
-            break;
-
         case GameState::Title_Options_Small:
             
             if (justPressed & A_BUTTON) {
@@ -141,12 +118,6 @@ void title_Update() {
             if (justPressed & DOWN_BUTTON) {
 
                 gameState++;
-
-            }
-
-            if (justPressed & UP_BUTTON) {
-
-                gameState--;
 
             }
 
@@ -231,11 +202,10 @@ void title(ArduboyGBase_Config<ABG_Mode::L4_Triplane> &a) {
 
     switch (gameState) {
         
-        case GameState::Title_Options_LEDS ... GameState::Title_Options_Auto:
+        case GameState::Title_Options_Small ... GameState::Title_Options_Auto:
             {
                 renderCommon(currentPlane);
 
-                if (soundSettings.getLED())                               SpritesU::drawPlusMaskFX(88, 18, Images::Sound_Checkbox, currentPlane);
                 if (soundSettings.getRenderSize() == RenderSize::Small)   SpritesU::drawPlusMaskFX(88, 38, Images::Sound_Checkbox, currentPlane);
                 if (soundSettings.getRenderSize() == RenderSize::Large)   SpritesU::drawPlusMaskFX(88, 48, Images::Sound_Checkbox, currentPlane);
                 if (soundSettings.getRenderSize() == RenderSize::Auto)    SpritesU::drawPlusMaskFX(88, 58, Images::Sound_Checkbox, currentPlane);
@@ -301,7 +271,7 @@ void renderCommon(uint8_t currentPlane) {
 
             break;
 
-        case  GameState::Title_Options_LEDS ... GameState::Title_Options_Auto:
+        case  GameState::Title_Options_Small ... GameState::Title_Options_Auto:
 
             SpritesU::drawPlusMaskFX(80, 15, Images::Title, (3 * (static_cast<uint8_t>(gameState) - 6)) + currentPlane);
             break;

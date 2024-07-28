@@ -14,7 +14,7 @@ enum class GameState : uint8_t {
     Title_Start,
         Title_Play = Title_Start,
         Title_Options,
-        Title_Options_LEDS,
+        Title_Options_Spare,
         Title_Options_Small,
         Title_Options_Large,
         Title_Options_Auto,

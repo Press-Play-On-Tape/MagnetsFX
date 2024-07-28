@@ -29,6 +29,12 @@ void saveCookie(bool enableLEDs) {
         a.digitalWriteRGB(BLUE_LED, RGB_ON);
     }
     #endif
+
+    #ifdef USE_LED_NOT_BRIGHT
+    if (enableLEDs) {
+        a.setRGBled(BLUE_LED, 16);
+    }
+    #endif
     
     FX::saveGameState(cookie);
 
@@ -38,6 +44,11 @@ void saveCookie(bool enableLEDs) {
     }
     #endif
 
+    #ifdef USE_LED_NOT_BRIGHT
+    if (enableLEDs) {
+        LED_Counter = 32;
+    }
+    #endif
 }
 
 void deactivateLEDs() {
@@ -48,6 +59,11 @@ void deactivateLEDs() {
         a.digitalWriteRGB(BLUE_LED, RGB_OFF);
     #endif
 
+    #ifdef USE_LED_NOT_BRIGHT
+        a.setRGBled(RED_LED, 0);
+        a.setRGBled(GREEN_LED, 0);
+        a.setRGBled(BLUE_LED, 0);
+    #endif
 }
 
 void printPuzzle() {

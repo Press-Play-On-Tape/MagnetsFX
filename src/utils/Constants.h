@@ -3,7 +3,8 @@
 #include "../../fxdata/images/Images.h"
 
 #define _PARTICLES
-#define USE_LED
+#define _USE_LED
+#define USE_LED_NOT_BRIGHT
 #define DEBUG_PRINT    Serial.print
 #define DEBUG_PRINTLN  Serial.println
 

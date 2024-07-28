@@ -1,5 +1,5 @@
 #define ABG_IMPLEMENTATION
-#define ABG_TIMER1
+#define ABG_TIMER3
 #define ABG_SYNC_PARK_ROW
 #define SPRITESU_IMPLEMENTATION
 
@@ -52,6 +52,10 @@ uint16_t seed = 72;
 uint8_t LED_Counter = 0;
 #endif
 
+#ifdef USE_LED_NOT_BRIGHT
+uint8_t LED_Counter = 0;
+#endif
+
 
 void setup() {
 
@@ -65,7 +69,12 @@ void setup() {
     #ifdef USE_LED
         deactivateLEDs();
     #endif
-    
+      
+    #ifdef USE_LED_NOT_BRIGHT
+        a.setRGBled(0, 0, 0);
+        deactivateLEDs();
+    #endif
+
     frameCount = 0;
 }
 
@@ -114,6 +123,20 @@ void loop() {
         
     #endif
 
+    #ifdef USE_LED_NOT_BRIGHT
+
+        if (LED_Counter > 0) {
+
+            LED_Counter--;
+
+            if (LED_Counter == 0) {
+                deactivateLEDs();             
+            }
+
+        }
+        
+    #endif
+
     if (hint.count > 0) {
 
         hint.count--;
@@ -125,6 +148,5 @@ void loop() {
         }
 
     }
-
 
 }

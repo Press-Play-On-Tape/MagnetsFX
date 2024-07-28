@@ -198,36 +198,42 @@ void play_Update() {
                 frameCount = 0;
 
             }
+                
+            switch (isValidMove) {
 
-            if (soundSettings.getLED()) {
+                case ValidMove::Valid:
                     
-                switch (isValidMove) {
+                    #ifdef USE_LED
+                        a.digitalWriteRGB(GREEN_LED, RGB_ON);
+                        LED_Counter = Constants::LED_Period;
+                    #endif
+                    
+                    #ifdef USE_LED_NOT_BRIGHT
+                        a.setRGBled(GREEN_LED, 16);
+                        LED_Counter = Constants::LED_Period;
+                    #endif
 
-                    case ValidMove::Valid:
-                        
-                        #ifdef USE_LED
-                            a.digitalWriteRGB(GREEN_LED, RGB_ON);
-                            LED_Counter = Constants::LED_Period;
-                        #endif
+                    break;
 
-                        break;
+                case ValidMove::NotValid:
 
-                    case ValidMove::NotValid:
+                    #ifdef USE_LED
+                        a.digitalWriteRGB(RED_LED, RGB_ON);
+                        LED_Counter = Constants::LED_Period;
+                    #endif
+                    
+                    #ifdef USE_LED_NOT_BRIGHT
+                        a.setRGBled(RED_LED, 16);
+                        LED_Counter = Constants::LED_Period;
+                    #endif
 
-                        #ifdef USE_LED
-                            a.digitalWriteRGB(RED_LED, RGB_ON);
-                            LED_Counter = Constants::LED_Period;
-                        #endif
+                    break;
 
-                        break;
-
-                    case ValidMove::Neutral:
-                        break;
-                        
-                }
-
+                case ValidMove::Neutral:
+                    break;
+                    
             }
-            
+
         }
 
         if (justPressed & B_BUTTON) {
